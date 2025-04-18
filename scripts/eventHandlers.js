@@ -39,8 +39,8 @@ $(document).on("click", ".btn-comment", function () {
       </div>
     `;
   container.append(form);
-  tribute.attach(form.find(".editor")[0]);
   container.find(".children").addClass("visible");
+  tribute.attach(form.find(".editor")[0]);
 });
 
 $(document).on("click", function (e) {
