@@ -1,0 +1,125 @@
+body {
+  background: #f0f2f5;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+button {
+  cursor: pointer;
+  width: max-content;
+}
+
+#forum-root {
+  width: 100%;
+  max-width: 600px;
+}
+
+.item {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  padding: 1rem;
+  position: relative;
+}
+
+.btn-delete {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: none;
+  background: transparent;
+  color: #e53935;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: #ccc;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+}
+
+.info .name {
+  font-weight: 600;
+}
+
+.info .timestamp {
+  font-size: 0.85rem;
+  color: #65676b;
+}
+
+.content {
+  margin: 0.75rem 0;
+  line-height: 1.4;
+}
+
+.actions {
+  display: flex;
+  border-top: 1px solid #ddd;
+  padding-top: 0.5rem;
+}
+
+.actions button {
+  text-align: center;
+}
+
+.children {
+  margin-top: 1rem;
+  padding-left: 2rem;
+  border-left: 2px solid #e9ebee;
+  display: none;
+  margin-left: 1.5em;
+}
+
+.children.visible {
+  display: block;
+}
+
+.post-form {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.post-form .editor {
+  min-height: 80px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+
+.ribbon {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  margin: 0.5rem 0;
+  background: #e9ebee;
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.comment-form {
+  margin-top: 0.5rem;
+}
+
+.comment-form .editor {
+  min-height: 60px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.5rem;
+}
