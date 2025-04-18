@@ -217,3 +217,14 @@ $(document).on("click", ".btn-submit-comment", async function () {
     $btn.prop("disabled", false);
   }
 });
+
+function removeNode(arr, uid) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].uid === uid) {
+      arr.splice(i, 1);
+      return true;
+    }
+    if (removeNode(arr[i].children, uid)) return true;
+  }
+  return false;
+}

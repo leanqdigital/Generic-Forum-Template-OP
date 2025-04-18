@@ -1,4 +1,13 @@
-// Toggle any upload‑menu
+let pendingFile = null;
+let pendingFileType = "";
+
+const acceptMap = {
+  image: "image/*",
+  video: "video/*",
+  audio: "audio/*",
+  file: "*/*",
+};
+
 $(document).on("click", ".upload-options", function (e) {
   e.stopPropagation();
   $(this).siblings(".upload-menu").toggle();
