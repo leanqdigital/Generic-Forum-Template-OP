@@ -56,7 +56,7 @@ $(document).on("click", ".ribbon", function () {
     for (const x of arr) {
       if (x.uid === uid) {
         x.isCollapsed = !x.isCollapsed;
-        renderAll();
+        applyFilterAndRender();
         return;
       }
       find(x.children);
@@ -262,7 +262,7 @@ $(document).on("click", ".btn-like", async function () {
     node.voteRecordId = newId;
   }
 
-  renderAll();
+  applyFilterAndRender();
 });
 
 // HANDLE BOOKMARK / UNBOOKMARK (posts only)
@@ -283,5 +283,33 @@ $(document).on("click", ".btn-bookmark", async function () {
     node.bookmarkRecordId = res.data.createOSavedPostContact.id;
   }
 
-  renderAll();
+  applyFilterAndRender();
+});
+
+let currentFilter = "Recent";
+
+function applyFilterAndRender() {
+  let items = postsStore; // postsStore is already sorted DESC by published date
+
+  switch (currentFilter) {
+    case "Featured":
+      items = items.filter((p) => p.isFeatured);
+      break;
+    case "My Posts":
+      items = items.filter((p) => p.authorId === GLOBAL_AUTHOR_ID);
+      break;
+    case "Saved Posts":
+      items = items.filter((p) => p.hasBookmarked);
+      break;
+    // 'Recent' = no filter
+  }
+
+  $("#forum-root").html(tmpl.render(items));
+}
+
+$(document).on("click", ".filter-btn", function () {
+  currentFilter = $(this).data("filter");
+  $(".filter-btn").removeClass("active");
+  $(this).addClass("active");
+  applyFilterAndRender();
 });

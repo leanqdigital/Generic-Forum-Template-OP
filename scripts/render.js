@@ -1,6 +1,6 @@
 function mapItem(raw, depth = 0) {
   const childrenRaw = safeArray(raw.ForumComments);
-  const createdAt = parseDate(raw.created_at);
+  const createdAt = parseDate(raw.post_published_date);
 
   // find any upvote record by this user
   const postUpvotes = safeArray(raw.Member_Post_Upvotes_Data);
@@ -37,9 +37,10 @@ function mapItem(raw, depth = 0) {
     hasBookmarked,
     bookmarkRecordId,
     children: depth < 2 ? childrenRaw.map((c) => mapItem(c, depth + 1)) : [],
-    children: depth < 2 ? childrenRaw.map((c) => mapItem(c, depth + 1)) : [],
+    // children: depth < 2 ? childrenRaw.map((c) => mapItem(c, depth + 1)) : [],
     isCollapsed: true,
     forumPostId: depth === 0 ? raw.id : raw.forum_post_id,
+    isFeatured: raw.featured_post === true,
   };
 }
 
