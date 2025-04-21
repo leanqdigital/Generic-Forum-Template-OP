@@ -37,26 +37,6 @@ button {
   }
 }
 
-.editor:focus-within,
-.editor:focus-visible,
-.editor:focus,
-.editor:active,
-.editor:hover{
-  border: 1px solid var(--primary) !important;
-  outline: 1px solid var(--primary) !important;
-}
-
-.filepond--file-action-button{
-  padding: 0 !important;
-}
-.plyr__control{
-  padding: 15px !important;
-}
-.plyr--audio {
-  background-color: var(--neutral) !important;
-  border: 1px solid var(--neutral) !important;
-}
-
 .btn-delete {
   position: absolute;
   top: 8px;
@@ -68,14 +48,51 @@ button {
   font-size: 0.8rem;
 }
 
-.search-wrapper {
+.btn-bookmark {
+  margin-left: auto;
+}
+
+.btn-like.liked,
+.btn-bookmark.bookmarked {
+  background: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.filter-btn.active {
+  background: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.file-filter-menu {
+  display: none;
+}
+
+.file-filter-menu li:hover,
+.file-filter-menu li.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.file-filter.open .file-filter-menu {
+  display: block;
+}
+
+.clearIcon.hidden {
+  display: none;
+}
+
+.search-wrapper,
+.editor {
   border-radius: 4px;
   transition: 0.2s ease-in-out;
+  border: 2px solid #ccc;
 }
 
 .search-wrapper:hover,
 .search-wrapper:focus-within {
-  border: 1px solid var(--primary);
+  border: 2px solid var(--primary);
 }
 
 #searchPost {
@@ -83,19 +100,21 @@ button {
   outline: none;
 }
 
-.children {
-  display: none;
+.editor:focus-within,
+.editor:focus-visible,
+.editor:focus,
+.editor:active,
+.editor:hover {
+  border: 1px solid var(--primary) !important;
+  outline: 1px solid var(--primary) !important;
 }
 
-.children.visible {
-  display: block;
+.filepond--root {
+  cursor: pointer;
 }
 
-.canvasWaveform {
-  margin-top: 1em;
-  background: #f0f0f0;
-  border: 1px solid #ccc;
-  display: none;
+.filepond--file-action-button {
+  padding: 0 !important;
 }
 
 .filepond--file,
@@ -136,37 +155,26 @@ button {
   cursor: pointer;
 }
 
-.btn-bookmark {
-  margin-left: auto;
+.plyr__control {
+  padding: 15px !important;
 }
 
-.btn-like.liked,
-.btn-bookmark.bookmarked {
-  background: #007bff;
-  color: #fff;
-  border-color: #007bff;
+.plyr--audio {
+  background-color: var(--neutral) !important;
+  border: 1px solid var(--neutral) !important;
 }
 
-.filter-btn.active {
-  background: #007bff;
-  color: #fff;
-  border-color: #007bff;
-}
-
-.file-filter-menu {
+.children {
   display: none;
 }
 
-.file-filter-menu li:hover,
-.file-filter-menu li.active {
-  background-color: #007bff;
-  color: #fff;
-}
-
-.file-filter.open .file-filter-menu {
+.children.visible {
   display: block;
 }
 
-.clearIcon.hidden {
+.canvasWaveform {
+  margin-top: 1em;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
   display: none;
 }
