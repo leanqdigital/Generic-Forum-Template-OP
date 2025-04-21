@@ -40,18 +40,14 @@
 
     <div id="post-editor" class="editor min-h-[80px] resize-y p-2 rounded" contenteditable="true"
       data-placeholder="Write a post..."></div>
-
     <div class="upload-section">
       <div class="flex item-center gap-4 my-4">
-        <button id="submit-post">Post</button>
         <button id="recordBtn" class="recordBtn">🎙 Start Recording</button>
+        <button id="submit-post">Post</button>
       </div>
-
       <input type="file" id="file-input" class="file-input" style="display: none;"
         accept="image/*,audio/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-
       <canvas class="canvasWaveform waveform" id="waveform" width="450" height="100"></canvas>
-
     </div>
   </div>
 
@@ -109,7 +105,7 @@
           {{if fileContent}}
               {{if fileContent.link}}
                 {{if fileType === "Image"}}
-                  <img src="{{:fileContent.link}}" style="width:100%;height:300px;object-fit:contain;" alt="preview" />
+                  <img src="{{:fileContent.link}}" style="width:100%;height:300px;object-fit:cover;" alt="preview" />
                 {{else fileType === "Audio"}}
                   <audio class="js-player" controls>
                     <source src="{{:fileContent.link}}" type="audio/mpeg" />
@@ -130,7 +126,7 @@
         {{if fileContentComment}}
               {{if fileContentComment.link}}
                 {{if fileType === "Image"}}
-                  <img src="{{:fileContentComment.link}}" style="width:100%;height:300px;object-fit:contain;" alt="preview" />
+                  <img src="{{:fileContentComment.link}}" style="width:100%;height:300px;object-fit:cover;" alt="preview" />
                 {{else fileType === "Audio"}}
                   <audio class="js-player" controls>
                     <source src="{{:fileContentComment.link}}" type="audio/mpeg" />

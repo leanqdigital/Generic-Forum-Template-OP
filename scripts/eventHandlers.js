@@ -9,35 +9,24 @@ $(document).on("click", ".btn-comment", function () {
 
   $(".comment-form").remove();
   const form = `
-      <div class="comment-form my-2">
-        <div
-          class="editor min-h-[80px] resize-y p-2 rounded"
-          contenteditable="true"
-          data-placeholder="Write a reply..."
-        ></div>
-
-        <div class = "flex items-center gap-4 my-4">
-
-     <div class="upload-section">
-      <div class="flex item-center gap-4 my-4">
-        <button id="recordBtn" class="recordBtn">🎙 Start Recording</button>
+    <div class="comment-form my-2">
+      <div class="editor min-h-[80px] resize-y p-2 rounded" contenteditable="true" data-placeholder="Write a reply..."></div>
+      <div class="flex items-center gap-4 my-4">
+          <div class="upload-section w-full">
+              <div class="flex item-center gap-4 my-4">
+                  <button id="recordBtn" class="recordBtn">🎙 Start Recording</button>
+                  <button class="btn-submit-comment" data-uid="${uid}">Post</button>
+              </div>
+              <input type="file" id="file-input" class="file-input" style="display: none;"
+                  accept="image/*,audio/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+              <canvas class="canvasWaveform waveform" id="waveform" width="450" height="100"></canvas>
+          </div>
       </div>
-
-      <input type="file" id="file-input" class="file-input" style="display: none;"
-        accept="image/*,audio/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-
-      <canvas class="canvasWaveform waveform" id="waveform" width="450" height="100"></canvas>
-
     </div>
-      <button class="btn-submit-comment" data-uid="${uid}">
-        Post
-      </button>
-        </div>
-
-      </div>
     `;
   container.append(form);
   container.find(".children").addClass("visible");
+  initFilePond();
   tribute.attach(form.find(".editor")[0]);
 });
 

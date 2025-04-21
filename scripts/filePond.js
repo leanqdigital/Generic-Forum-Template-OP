@@ -5,7 +5,8 @@ FilePond.registerPlugin(
   FilePondPluginFilePoster
 );
 
-window.addEventListener("DOMContentLoaded", () => {
+function initFilePond() {
+  console.log("Initialized");
   document.querySelectorAll(".upload-section").forEach((section) => {
     const inputElement = section.querySelector(".file-input");
     const recordBtn = section.querySelector(".recordBtn");
@@ -62,52 +63,55 @@ window.addEventListener("DOMContentLoaded", () => {
       animationId = requestAnimationFrame(drawWaveform);
     };
 
-    if (recordBtn){
-    recordBtn.addEventListener("click", () => {
-      if (!isRecording) {
-        canvas.style.display = "block";
-        navigator.mediaDevices
-          .getUserMedia({ audio: true })
-          .then((stream) => {
-            mediaStream = stream;
-            audioContext = new (window.AudioContext ||
-              window.webkitAudioContext)();
-            analyser = audioContext.createAnalyser();
-            source = audioContext.createMediaStreamSource(stream);
-            source.connect(analyser);
-            analyser.fftSize = 2048;
-            dataArray = new Uint8Array(analyser.frequencyBinCount);
+    if (recordBtn) {
+      recordBtn.addEventListener("click", () => {
+        if (!isRecording) {
+          canvas.style.display = "block";
+          navigator.mediaDevices
+            .getUserMedia({ audio: true })
+            .then((stream) => {
+              mediaStream = stream;
+              audioContext = new (window.AudioContext ||
+                window.webkitAudioContext)();
+              analyser = audioContext.createAnalyser();
+              source = audioContext.createMediaStreamSource(stream);
+              source.connect(analyser);
+              analyser.fftSize = 2048;
+              dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-            drawWaveform();
+              drawWaveform();
 
-            recorder.start().then(() => {
-              isRecording = true;
-              recordBtn.textContent = "⏹ Stop Recording";
-            });
-          })
-          .catch((e) => console.error(e));
-      } else {
-        cancelAnimationFrame(animationId);
-        canvas.style.display = "none";
-        mediaStream?.getTracks().forEach((track) => track.stop());
+              recorder.start().then(() => {
+                isRecording = true;
+                recordBtn.textContent = "⏹ Stop Recording";
+              });
+            })
+            .catch((e) => console.error(e));
+        } else {
+          cancelAnimationFrame(animationId);
+          canvas.style.display = "none";
+          mediaStream?.getTracks().forEach((track) => track.stop());
 
-        recorder
-          .stop()
-          .getMp3()
-          .then(([buffer, blob]) => {
-            isRecording = false;
-            recordBtn.textContent = "🎙 Start Recording";
+          recorder
+            .stop()
+            .getMp3()
+            .then(([buffer, blob]) => {
+              isRecording = false;
+              recordBtn.textContent = "🎙 Start Recording";
 
-            const file = new File(buffer, "recorded-audio.mp3", {
-              type: blob.type,
-              lastModified: Date.now(),
-            });
+              const file = new File(buffer, "recorded-audio.mp3", {
+                type: blob.type,
+                lastModified: Date.now(),
+              });
 
-            pond.addFile(file);
-          })
-          .catch((e) => console.error(e));
-      }
-    });
-  }
+              pond.addFile(file);
+            })
+            .catch((e) => console.error(e));
+        }
+      });
+    }
   });
+}
+window.addEventListener("DOMContentLoaded", () => {
+  initFilePond();
 });
