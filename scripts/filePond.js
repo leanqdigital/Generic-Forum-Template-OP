@@ -66,6 +66,12 @@ function initFilePond() {
     if (recordBtn) {
       recordBtn.addEventListener("click", () => {
         if (!isRecording) {
+          pond.setOptions({
+            allowBrowse: false,
+            allowDrop: false,
+            allowPaste: false
+          });
+          inputElement.disabled = true;
           canvas.style.display = "block";
           navigator.mediaDevices
             .getUserMedia({ audio: true })
@@ -91,7 +97,7 @@ function initFilePond() {
           cancelAnimationFrame(animationId);
           canvas.style.display = "none";
           mediaStream?.getTracks().forEach((track) => track.stop());
-
+          
           recorder
             .stop()
             .getMp3()
@@ -103,8 +109,32 @@ function initFilePond() {
                 type: blob.type,
                 lastModified: Date.now(),
               });
-
-              pond.addFile(file);
+              // ✅ Re-enable FilePond interaction
+              pond.setOptions({
+                allowBrowse: true,
+                allowDrop: true,
+                allowPaste: true
+              });
+              inputElement.disabled = false;
+              // Add to FilePond
+              pond.addFile(file).then(() => {
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                inputElement.files = dataTransfer.files;
+                pendingFile = file;
+                if (file.type.startsWith("audio/")) {
+                  fileTypeCheck = "Audio";
+                } else if (file.type.startsWith("video/")) {
+                  fileTypeCheck = "Video";
+                } else if (file.type.startsWith("image/")) {
+                  fileTypeCheck = "Image";
+                } else {
+                  fileTypeCheck = "File";
+                }
+                const nativeEvent = new Event("change", { bubbles: true });
+                inputElement.dispatchEvent(nativeEvent);
+                $(inputElement).trigger("change");
+              });
             })
             .catch((e) => console.error(e));
         }

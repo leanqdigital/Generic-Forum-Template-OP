@@ -47,7 +47,7 @@
       </div>
       <input type="file" id="file-input" class="file-input" style="display: none;"
         accept="image/*,audio/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-      <canvas class="canvasWaveform waveform" id="waveform" width="450" height="100"></canvas>
+      <canvas class="canvasWaveform waveform w-full" id="waveform" width="450" height="100"></canvas>
     </div>
   </div>
 
@@ -100,7 +100,7 @@
         </div>
       </div>
       <div class="content my-2">{{:content}}</div>
-      <div class="file-preview my-2">
+      <div class="file-preview">
         {{if depth === 0}}
           {{if fileContent}}
               {{if fileContent}}
