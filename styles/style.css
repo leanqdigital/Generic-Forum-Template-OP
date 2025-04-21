@@ -9,6 +9,7 @@
   --light: #f8f9fa;
   --dark: #343a40;
   --neutral: #adb5bd;
+  --plyr-color-main: #e63946;
 }
 
 body {
@@ -24,8 +25,17 @@ button {
   padding: 8px 10px !important;
   cursor: pointer;
   width: max-content;
-  text-align: center;
-  border: 1px solid #ccc;
+}
+.plyr--audio{
+  background-color: var(--neutral) !important;
+  border: 1px solid var(--neutral) !important;
+}
+#forum-root {
+  width: 100%;
+  max-width: 600px;
+}
+
+.item {
   background: #fff;
   cursor: pointer;
   font-size: 12px;

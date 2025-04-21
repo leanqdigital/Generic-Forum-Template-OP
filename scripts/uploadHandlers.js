@@ -1,5 +1,5 @@
 let pendingFile = null;
-let pendingFileType = "";
+let pendingFileType = "File";
 
 const acceptMap = {
   image: "image/*",

@@ -31,6 +31,10 @@ function connect() {
       const raws = msg.payload.data.subscribeToForumPosts ?? [];
       postsStore = raws.map((r) => mapItem(r, 0));
       applyFilterAndRender();
+      // iniitilize plyr js 
+      requestAnimationFrame(() => {
+        Plyr.setup('.js-player');
+      });
     } else if (msg.type === "GQL_ERROR") {
       console.error("Subscription error", msg.payload);
     } else if (msg.type === "GQL_COMPLETE") {

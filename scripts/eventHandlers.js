@@ -106,6 +106,9 @@ $(document).on("click", ".btn-delete", function () {
 });
 
 $(document).on("click", "#submit-post", async function () {
+  requestAnimationFrame(() => {
+    Plyr.setup('.js-player');
+  });
   const $btn = $(this);
   const formWrapper = document.querySelector(".post-form ");
   const editor = $("#post-editor");
@@ -308,6 +311,9 @@ $(document).on("click", ".btn-bookmark", async function () {
 });
 
 function applyFilterAndRender() {
+  requestAnimationFrame(() => {
+    Plyr.setup('.js-player');
+  });
   let items = postsStore;
   switch (currentFilter) {
     case "Featured":
