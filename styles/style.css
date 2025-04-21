@@ -37,6 +37,15 @@ button {
   }
 }
 
+.editor:focus-within,
+.editor:focus-visible,
+.editor:focus,
+.editor:active,
+.editor:hover{
+  border: 1px solid var(--primary) !important;
+  outline: 1px solid var(--primary) !important;
+}
+
 .plyr--audio {
   background-color: var(--neutral) !important;
   border: 1px solid var(--neutral) !important;

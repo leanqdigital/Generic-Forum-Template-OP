@@ -11,7 +11,7 @@ $(document).on("click", ".btn-comment", function () {
   const form = `
       <div class="comment-form my-2">
         <div
-          class="editor min-h-[80px] resize-y p-2 border border-1-[#ccc]"
+          class="editor min-h-[80px] resize-y p-2 border border-1-[#ccc] rounded"
           contenteditable="true"
           data-placeholder="Write a reply..."
         ></div>

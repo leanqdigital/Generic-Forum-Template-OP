@@ -3,9 +3,9 @@ const tribute = new Tribute({
       {
         trigger: "@",
         menuItemTemplate: (item) =>
-          `<div class="mention-item">
+          `<div class="mention-item flex items-center gap-4">
            <img src="${item.original.image}" width="24" height="24"/>
-           <span>${item.string}</span>
+           <span class = "font-light text-sm">${item.string}</span>
          </div>`,
         selectTemplate: (item) =>
           `<span contenteditable="false" class="mention" data-mention-id="${item.original.value}">
