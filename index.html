@@ -15,7 +15,12 @@
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
   <!-- Plyr JS -->
   <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-
+  <script
+    src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+  <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+  <script src="https://unpkg.com/filepond-plugin-media-preview/dist/filepond-plugin-media-preview.js"></script>
+  <script src="https://unpkg.com/filepond-plugin-file-poster/dist/filepond-plugin-file-poster.js"></script>
+  <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tributejs@5.1.3/dist/tribute.css">
   <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
   <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
@@ -36,23 +41,18 @@
     <div id="post-editor" class="editor min-h-[80px] resize-y p-2 rounded" contenteditable="true"
       data-placeholder="Write a post..."></div>
 
-    <div class="flex item-center gap-4 my-4">
-      <button id="submit-post">Post</button>
-      <button id="upload-options" class="upload-options">Upload</button>
-      <button id="recordBtn">🎙 Start Recording</button>
+    <div class="upload-section">
+      <div class="flex item-center gap-4 my-4">
+        <button id="submit-post">Post</button>
+        <button id="recordBtn" class="recordBtn">🎙 Start Recording</button>
+      </div>
+
+      <input type="file" id="file-input" class="file-input" style="display: none;"
+        accept="image/*,audio/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+
+      <canvas class="canvasWaveform waveform" id="waveform" width="450" height="100"></canvas>
+
     </div>
-
-    <div id="upload-menu" class="upload-menu" style="display:none">
-      <button class="upload-choice" data-type="image">Image</button>
-      <button class="upload-choice" data-type="video">Video</button>
-      <button class="upload-choice" data-type="audio">Audio</button>
-      <button class="upload-choice" data-type="file">File</button>
-    </div>
-
-    <input type="file" id="file-input" class="file-input" style="display: none;"
-      accept="image/*,audio/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-    <canvas class="canvasWaveform w-full" id="waveform" height="100"></canvas>
-
   </div>
 
   <div id="post-filters" class="bg-white post-filters w-full shadow-lg p-4 flex items-center flex-col my-4 rounded">
@@ -106,42 +106,46 @@
       <div class="content my-2">{{:content}}</div>
       <div class="file-preview my-2">
         {{if depth === 0}}
-          {{if fileType && fileContent.link || ""}}
-            {{if fileType === "Image"}}
-              <img src="{{:fileContent.link}}" style="width:100%;height:300px;object-fit:contain;" alt="preview" />
-              {{else fileType === "Audio"}}
-                <audio class="js-player" controls>
-                  <source src="{{:fileContent.link}}" type="audio/mpeg" />
+          {{if fileContent}}
+              {{if fileContent.link}}
+                {{if fileType === "Image"}}
+                  <img src="{{:fileContent.link}}" style="width:100%;height:300px;object-fit:contain;" alt="preview" />
+                {{else fileType === "Audio"}}
+                  <audio class="js-player" controls>
+                    <source src="{{:fileContent.link}}" type="audio/mpeg" />
                     Your browser does not support the audio tag.
-                </audio>
-              {{else fileType === "Video"}}
-                <video class="js-player"controls style="width: 100%; height: auto;">
-                  <source src="{{:fileContent.link}}" type="video/mp4">
-                  Your browser does not support video.
-                </video>
-              {{else}}
-              <div> {{:fileContent.name}}</div>
+                  </audio>
+                {{else fileType === "Video"}}
+                  <video class="js-player" controls style="width: 100%; height: auto;">
+                    <source src="{{:fileContent.link}}" type="video/mp4" />
+                    Your browser does not support video.
+                  </video>
+                {{else}}
+                  <div>{{:fileContent.name}}</div>
+                {{/if}}
+              {{/if}}
             {{/if}}
-          {{/if}}
         {{/if}}
-        {{if depth > 2}}
-        {{if fileType && file.link || ""}}
-          {{if fileType === "Image"}}
-            <img src="{{:file.link}}" style="width:100%;height:300px;object-fit:contain;" alt="preview" />
-            {{else fileType === "Audio"}}
-              <audio class="js-player" controls>
-                <source src="{{:file.link}}" type="audio/mpeg" />
-                  Your browser does not support the audio tag.
-              </audio>
-            {{else fileType === "Video"}}
-              <video class="js-player"controls style="width: 100%; height: auto;">
-                <source src="{{:file.link}}" type="video/mp4">
-                Your browser does not support video.
-              </video>
-            {{else}}
-            <div> {{:file.name}}</div>
-          {{/if}}
-        {{/if}}
+        {{if depth > 0}}
+        {{if fileContentComment}}
+              {{if fileContentComment.link}}
+                {{if fileType === "Image"}}
+                  <img src="{{:fileContentComment.link}}" style="width:100%;height:300px;object-fit:contain;" alt="preview" />
+                {{else fileType === "Audio"}}
+                  <audio class="js-player" controls>
+                    <source src="{{:fileContentComment.link}}" type="audio/mpeg" />
+                    Your browser does not support the audio tag.
+                  </audio>
+                {{else fileType === "Video"}}
+                  <video class="js-player" controls style="width: 100%; height: auto;">
+                    <source src="{{:fileContentComment.link}}" type="video/mp4" />
+                    Your browser does not support video.
+                  </video>
+                {{else}}
+                  <div>{{:fileContentComment.name}}</div>
+                {{/if}}
+              {{/if}}
+            {{/if}}
       {{/if}}
 
 </div>
@@ -175,12 +179,7 @@
     </div>
   </script>
 
-  <script
-    src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
-  <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
-  <script src="https://unpkg.com/filepond-plugin-media-preview/dist/filepond-plugin-media-preview.js"></script>
-  <script src="https://unpkg.com/filepond-plugin-file-poster/dist/filepond-plugin-file-poster.js"></script>
-  <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+
   <script src="https://unpkg.com/mic-recorder-to-mp3@2.2.1/dist/index.min.js"></script>
 
 
