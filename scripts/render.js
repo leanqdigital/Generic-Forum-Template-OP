@@ -40,7 +40,7 @@ function mapItem(raw, depth = 0) {
     isCollapsed: true,
     forumPostId: depth === 0 ? raw.id : raw.forum_post_id,
     isFeatured: raw.featured_post === true,
-    fileType: raw.file_type || 'None',
+    fileType: raw.file_type || "None",
   };
 }
 

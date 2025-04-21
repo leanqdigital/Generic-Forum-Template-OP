@@ -6,26 +6,31 @@
   <title>Forum Feed</title>
   <link rel="stylesheet" href="styles/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tributejs@5.1.3/dist/tribute.css">
-  <!-- FilePond Core CSS -->
   <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
-  <!-- Image & Media Preview CSS -->
   <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
     rel="stylesheet" />
   <link href="https://unpkg.com/filepond-plugin-media-preview/dist/filepond-plugin-media-preview.css"
     rel="stylesheet" />
-  <!-- File Poster CSS for generic file type thumbnails -->
   <link href="https://unpkg.com/filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css" rel="stylesheet" />
-
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jsrender/jsrender.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tributejs@5.1.3/dist/tribute.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-  <div id="post-creation-form" class="post-form">
-    <div id="post-editor" class="editor" contenteditable="true" data-placeholder="Write a post..."></div>
-    <button id="submit-post">Post</button>
-    <button id="upload-options" class="upload-options">Upload</button>
+<body class="max-w-[700px] bg-light-600 flex flex-col items-center justify-center m-auto p-6">
+
+  <div id="post-creation-form" class="post-form bg-white shadow-lg p-4 rounded w-full">
+
+    <div id="post-editor" class="editor min-h-[80px] resize-y p-2 border border-1-[#ccc]" contenteditable="true"
+      data-placeholder="Write a post..."></div>
+
+    <div class="flex item-center gap-4 my-4">
+      <button id="submit-post">Post</button>
+      <button id="upload-options" class="upload-options">Upload</button>
+      <button id="recordBtn">🎙 Start Recording</button>
+    </div>
+
     <div id="upload-menu" class="upload-menu" style="display:none">
       <button class="upload-choice" data-type="image">Image</button>
       <button class="upload-choice" data-type="video">Video</button>
@@ -34,80 +39,80 @@
     </div>
     <input type="file" id="file-input" class="file-input" style="display: none;"
       accept="image/*,audio/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-
-    <button id="recordBtn">🎙 Start Recording</button>
     <canvas class="canvasWaveform" id="waveform" width="450" height="100"></canvas>
+
   </div>
 
-  <div id="post-filters" class="post-filters">
-    <button class="filter-btn active" data-filter="Recent">Recent</button>
-    <button class="filter-btn" data-filter="Featured">Featured Post</button>
-    <button class="filter-btn" data-filter="My Posts">My Posts</button>
-    <button class="filter-btn" data-filter="Saved Posts">Saved Post</button>
-
-    <!-- new file‑type dropdown -->
-    <div class="file-filter">
-      <button id="file-filter-btn" class="filter-btn">All ▾</button>
-      <ul id="file-filter-menu" class="file-filter-menu">
-        <li data-type="All" class="active">All</li>
-        <li data-type="Image">Image</li>
-        <li data-type="Video">Video</li>
-        <li data-type="Audio">Audio</li>
-        <li data-type="File">File</li>
-      </ul>
+  <div id="post-filters" class="post-filters w-full shadow-lg p-4 flex items-center flex-col my-4 rounded">
+    <div class="flex items-center justify-between w-full ">
+      <div class="flex items-center gap-4">
+        <button class="filter-btn active" data-filter="Recent">Recent</button>
+        <button class="filter-btn" data-filter="Featured">Featured Post</button>
+        <button class="filter-btn" data-filter="My Posts">My Posts</button>
+        <button class="filter-btn" data-filter="Saved Posts">Saved Post</button>
+      </div>
+      <div class="file-filter relative">
+        <button id="file-filter-btn" class="filter-btn">All ▾</button>
+        <ul id="file-filter-menu"
+          class="file-filter-menu absolute top-[100%] right-0 bg-[#ffffff] border border-1-[#ccc] list-style-none p-0 mr-[4px] min-w-[6em] z-[10]">
+          <li class = "py-2 px-8 cursor-pointer" data-type="All" class="active">All</li>
+          <li class = "py-2 px-8 cursor-pointer" data-type="Image">Image</li>
+          <li class = "py-2 px-8 cursor-pointer" data-type="Video">Video</li>
+          <li class = "py-2 px-8 cursor-pointer" data-type="Audio">Audio</li>
+          <li class = "py-2 px-8 cursor-pointer" data-type="File">File</li>
+        </ul>
+      </div>
+    </div>
+    <div class="search-wrapper w-full my-4 relative">
+      <input type="text" id="searchPost" class = "py-2 px-4 rounded text-sm border border-1-[#ccc]" placeholder="Search by author or text…" autocomplete="off" />
+      <span class="clearIcon hidden absolute top-[50%] right-[8px] cursor-pointer text-sm translate-y-[-50%]">✕</span>
+      <span class="searchIcon absolute top-[50%] right-[8px] cursor-pointer text-sm translate-y-[-50%]">🔍</span>
     </div>
   </div>
 
-  <div class="search-wrapper">
-    <input type="text" id="searchPost" placeholder="Search by author or text…" autocomplete="off" />
-    <span class="clearIcon hidden">✕</span>
-    <span class="searchIcon">🔍</span>
-  </div>
-
-
-  <div id="forum-root"></div>
+  <div id="forum-root" class="shadow-lg p-4 rounded w-full"></div>
 
   <script id="tmpl-item" type="text/x-jsrender">
-    <div class="item" data-uid="{{:uid}}" data-depth="{{:depth}}">
+    <div class="item bg-white rounded shadow-sm my-4 p-4 relative border border-4-black" data-uid="{{:uid}}" data-depth="{{:depth}}">
       {{if canDelete}}
         <button class="btn-delete" data-uid="{{:uid}}">Delete</button>
       {{/if}}
-      <div class="author">
-        <img class="avatar"
+      <div class="author flex items-center mb-2">
+        <img class="avatar w-[40px] h-[40px] bg-[#ccc] rounded-full mr-[12px]"
              src="{{:authorImage}}"
              alt="{{:authorName}}"
              onerror="this.onerror=null;this.src='https://files.ontraport.com/media/b0456fe87439430680b173369cc54cea.php03bzcx?Expires=4895186056&Signature=fw-mkSjms67rj5eIsiDF9QfHb4EAe29jfz~yn3XT0--8jLdK4OGkxWBZR9YHSh26ZAp5EHj~6g5CUUncgjztHHKU9c9ymvZYfSbPO9JGht~ZJnr2Gwmp6vsvIpYvE1pEywTeoigeyClFm1dHrS7VakQk9uYac4Sw0suU4MpRGYQPFB6w3HUw-eO5TvaOLabtuSlgdyGRie6Ve0R7kzU76uXDvlhhWGMZ7alNCTdS7txSgUOT8oL9pJP832UsasK4~M~Na0ku1oY-8a7GcvvVv6j7yE0V0COB9OP0FbC8z7eSdZ8r7avFK~f9Wl0SEfS6MkPQR2YwWjr55bbJJhZnZA__&Key-Pair-Id=APKAJVAAMVW6XQYWSTNA';">
         <div class="info">
-          <span class="name">{{:authorName}}</span>
-          <span class="timestamp">{{:timeAgo}}</span>
+          <span class="name font-bold">{{:authorName}}</span>
+          <span class="timestamp text-sm text-[#65676b] ml-2">{{:timeAgo}}</span>
         </div>
       </div>
-      <div class="content">{{:content}}</div>
-      <div class="actions">
-        <button
-        class="btn-like{{:hasUpvoted ? ' liked' : ''}}"
-        data-uid="{{:uid}}">
-        {{:hasUpvoted ? 'Unlike' : 'Like'}} ({{:upvotes}})
+      <div class="content my-4">{{:content}}</div>
+      <div class="actions flex items-center gap-4 border-t border-1-[#ddd] py-4">
+      <button 
+            class="btn-like{{:hasUpvoted ? ' liked' : ''}}" 
+            data-uid="{{:uid}}">
+            {{:hasUpvoted ? 'Liked' : 'Like'}} 
+            ({{:upvotes}})
       </button>
-      {{if depth === 0}}
-      <button
-        class="btn-bookmark{{:hasBookmarked ? ' bookmarked' : ''}}"
-        data-uid="{{:uid}}">
-        {{:hasBookmarked ? 'Unbookmark' : 'Bookmark'}}
-      </button>
-    {{/if}}
-        {{if depth < 2}}
+      {{if depth < 2}}
         <button class="btn-comment" data-uid="{{:uid}}">Comment</button>
+      {{/if}}
+      {{if depth === 0}}
+        <button
+          class="btn-bookmark{{:hasBookmarked ? ' bookmarked' : ''}}"
+          data-uid="{{:uid}}">
+          {{:hasBookmarked ? 'Bookmarked' : 'Bookmark'}}
+        </button>
       {{/if}}
       </div>
       {{if depth < 2}}
-      <div class="ribbon" data-uid="{{:uid}}">
-        {{:children.length}} {{:children.length === 1 ? 'Comment' : 'Comments'}}
-      </div>
+        <div class="ribbon w-full my-4 py-2 bg-[#e9ebee] text-center cursor-pointer text-sm hover:bg-[#007bff] hover:text-white" data-uid="{{:uid}}">
+          {{:children.length}} {{:children.length === 1 ? 'Comment' : 'Comments'}}
+        </div>
       {{/if}}
-
       {{if children.length && !isCollapsed}}
-        <div class="children visible">
+        <div class="children visible my-4 pl-8 border-l border-2-[#e9ebee] ml-[12px]">
           {{for children}}
             {{include tmpl="#tmpl-item"/}}
           {{/for}}
@@ -137,8 +142,6 @@
   <script src="scripts/uploadHandlers.js"></script>
   <script src="scripts/eventHandlers.js"></script>
   <script src="scripts/app.js"></script>
-
-
 
 </body>
 

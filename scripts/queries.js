@@ -201,4 +201,3 @@ let DELETE_COMMENT_VOTE_MUTATION = `
     }
   }
 `;
-

@@ -9,33 +9,40 @@ $(document).on("click", ".btn-comment", function () {
 
   $(".comment-form").remove();
   const form = `
-      <div class="comment-form">
+      <div class="comment-form my-2">
         <div
-          class="editor"
+          class="editor min-h-[80px] resize-y p-2 border border-1-[#ccc]"
           contenteditable="true"
           data-placeholder="Write a reply..."
         ></div>
+
+        <div class = "flex items-center gap-4 my-4">
         <button type="button" class="upload-options">
-          Upload
+        Upload
+      </button>
+
+      <div class="upload-menu" style="display:none">
+        <button class="upload-choice" data-type="image">
+          Image
         </button>
-        <div class="upload-menu" style="display:none">
-          <button class="upload-choice" data-type="image">
-            Image
-          </button>
-          <button class="upload-choice" data-type="video">
-            Video
-          </button>
-          <button class="upload-choice" data-type="audio">
-            Audio
-          </button>
-          <button class="upload-choice" data-type="file">
-            File
-          </button>
+        <button class="upload-choice" data-type="video">
+          Video
+        </button>
+        <button class="upload-choice" data-type="audio">
+          Audio
+        </button>
+        <button class="upload-choice" data-type="file">
+          File
+        </button>
+      </div>
+
+      <input type="file" class="file-input" style="display:none" />
+      <button class="btn-submit-comment" data-uid="${uid}">
+        Submit
+      </button>
         </div>
-        <input type="file" class="file-input" style="display:none" />
-        <button class="btn-submit-comment" data-uid="${uid}">
-          Submit
-        </button>
+
+
       </div>
     `;
   container.append(form);
