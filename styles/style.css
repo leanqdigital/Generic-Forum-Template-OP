@@ -15,6 +15,11 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+.state-disabled {
+  opacity: 50%;
+  pointer-events: none;
+}
+
 button {
   padding: 8px 10px !important;
   cursor: pointer;
@@ -23,7 +28,8 @@ button {
   border: 1px solid #ccc;
   background: #fff;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 12px;
+  line-height: normal;
   transition: 0.2s ease-in-out;
   &:hover {
     background: var(--primary);
@@ -40,6 +46,21 @@ button {
   color: #e53935;
   cursor: pointer;
   font-size: 0.8rem;
+}
+
+.search-wrapper {
+  border-radius: 4px;
+  transition: 0.2s ease-in-out;
+}
+
+.search-wrapper:hover,
+.search-wrapper:focus-within {
+  border: 1px solid var(--primary);
+}
+
+#searchPost {
+  border: none;
+  outline: none;
 }
 
 .children {

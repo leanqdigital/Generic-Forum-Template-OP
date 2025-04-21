@@ -63,8 +63,8 @@
         </ul>
       </div>
     </div>
-    <div class="search-wrapper w-full my-4 relative">
-      <input type="text" id="searchPost" class = "py-2 px-4 rounded text-sm border border-1-[#ccc]" placeholder="Search by author or text…" autocomplete="off" />
+    <div class="search-wrapper w-full my-4 relative border border-1-[#ccc]">
+      <input type="text" id="searchPost" class = "py-2 px-4 rounded text-sm" placeholder="Search by author or text…" autocomplete="off" />
       <span class="clearIcon hidden absolute top-[50%] right-[8px] cursor-pointer text-sm translate-y-[-50%]">✕</span>
       <span class="searchIcon absolute top-[50%] right-[8px] cursor-pointer text-sm translate-y-[-50%]">🔍</span>
     </div>
@@ -73,7 +73,10 @@
   <div id="forum-root" class="shadow-lg p-4 rounded w-full"></div>
 
   <script id="tmpl-item" type="text/x-jsrender">
-    <div class="item bg-white rounded shadow-sm my-4 p-4 relative border border-4-black" data-uid="{{:uid}}" data-depth="{{:depth}}">
+    <div 
+      class="item rounded shadow-xl my-4 p-4 relative border-2 border-[#e9ebee]" 
+      data-uid="{{:uid}}" 
+      data-depth="{{:depth}}">
       {{if canDelete}}
         <button class="btn-delete" data-uid="{{:uid}}">Delete</button>
       {{/if}}

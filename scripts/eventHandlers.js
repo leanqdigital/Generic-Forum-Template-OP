@@ -74,10 +74,7 @@ $(document).on("click", ".ribbon", function () {
 $(document).on("click", ".btn-delete", function () {
   const uid = $(this).data("uid");
   const $item = $(this).closest(".item");
-  $item
-    .css("opacity", "0.5")
-    .find("button, .editor, .ribbon")
-    .prop("disabled", true);
+  $item.addClass("state-disabled");
 
   let node;
   (function find(arr) {
@@ -104,21 +101,20 @@ $(document).on("click", ".btn-delete", function () {
     })
     .catch((err) => {
       console.error("Delete failed", err);
-      $item
-        .css("opacity", "")
-        .find("button, .editor, .ribbon")
-        .prop("disabled", false);
+      $item.removeClass("state-disabled");
     });
 });
 
 $(document).on("click", "#submit-post", async function () {
   const $btn = $(this);
+  const formWrapper = document.querySelector(".post-form ");
   const editor = $("#post-editor");
   const htmlContent = editor.html().trim();
   if (!htmlContent && !pendingFile) return;
 
   $btn.prop("disabled", true);
   $("#upload-options").prop("disabled", true);
+  formWrapper.classList.add("state-disabled");
 
   const payload = {
     author_id: GLOBAL_AUTHOR_ID,
@@ -164,6 +160,7 @@ $(document).on("click", "#submit-post", async function () {
   } finally {
     $btn.prop("disabled", false);
     $("#upload-options").prop("disabled", false);
+    formWrapper.classList.remove("state-disabled");
   }
 });
 
@@ -175,6 +172,7 @@ $(document).on("click", ".btn-submit-comment", async function () {
   if (!htmlContent && !pendingFile) return;
 
   $btn.prop("disabled", true);
+  $form.addClass("state-disabled");
   const uid = $btn.data("uid");
   const node = findNode(postsStore, uid);
 
@@ -222,6 +220,7 @@ $(document).on("click", ".btn-submit-comment", async function () {
     console.error("Comment failed", err);
   } finally {
     $btn.prop("disabled", false);
+    $form.remove("state-disabled");
   }
 });
 
@@ -241,34 +240,40 @@ $(document).on("click", ".btn-like", async function () {
   const uid = $(this).data("uid");
   const node = findNode(postsStore, uid);
   const isPost = node.depth === 0;
+  $(this).addClass("state-disabled");
 
-  if (node.hasUpvoted) {
-    await fetchGraphQL(
-      isPost ? DELETE_POST_VOTE_MUTATION : DELETE_COMMENT_VOTE_MUTATION,
-      { id: node.voteRecordId }
-    );
-    node.upvotes--;
-    node.hasUpvoted = false;
-    node.voteRecordId = null;
-  } else {
-    const payload = isPost
-      ? { post_upvote_id: node.id, member_post_upvote_id: GLOBAL_AUTHOR_ID }
-      : {
-          forum_comment_upvote_id: node.id,
-          member_comment_upvote_id: GLOBAL_AUTHOR_ID,
-        };
-    const mutation = isPost
-      ? CREATE_POST_VOTE_MUTATION
-      : CREATE_COMMENT_VOTE_MUTATION;
-    const res = await fetchGraphQL(mutation, { payload });
-    const newId =
-      res.data.createMemberPostUpvotesPostUpvotes?.id ||
-      res.data.createMemberCommentUpvotesForumCommentUpvotes?.id;
-    node.upvotes++;
-    node.hasUpvoted = true;
-    node.voteRecordId = newId;
+  try {
+    if (node.hasUpvoted) {
+      await fetchGraphQL(
+        isPost ? DELETE_POST_VOTE_MUTATION : DELETE_COMMENT_VOTE_MUTATION,
+        { id: node.voteRecordId }
+      );
+      node.upvotes--;
+      node.hasUpvoted = false;
+      node.voteRecordId = null;
+    } else {
+      const payload = isPost
+        ? { post_upvote_id: node.id, member_post_upvote_id: GLOBAL_AUTHOR_ID }
+        : {
+            forum_comment_upvote_id: node.id,
+            member_comment_upvote_id: GLOBAL_AUTHOR_ID,
+          };
+      const mutation = isPost
+        ? CREATE_POST_VOTE_MUTATION
+        : CREATE_COMMENT_VOTE_MUTATION;
+      const res = await fetchGraphQL(mutation, { payload });
+      const newId =
+        res.data.createMemberPostUpvotesPostUpvotes?.id ||
+        res.data.createMemberCommentUpvotesForumCommentUpvotes?.id;
+      node.upvotes++;
+      node.hasUpvoted = true;
+      node.voteRecordId = newId;
+    }
+  } catch (err) {
+    console.log("error is", err);
+  } finally {
+    $(this).removeClass("state-disabled");
   }
-
   applyFilterAndRender();
 });
 
@@ -276,31 +281,31 @@ $(document).on("click", ".btn-like", async function () {
 $(document).on("click", ".btn-bookmark", async function () {
   const uid = $(this).data("uid");
   const node = findNode(postsStore, uid);
+  $(this).addClass("state-disabled");
 
-  if (node.hasBookmarked) {
-    await fetchGraphQL(DELETE_POST_BOOKMARK_MUTATION, {
-      id: node.bookmarkRecordId,
-    });
-    node.hasBookmarked = false;
-    node.bookmarkRecordId = null;
-  } else {
-    const payload = { contact_id: GLOBAL_AUTHOR_ID, saved_post_id: node.id };
-    const res = await fetchGraphQL(CREATE_POST_BOOKMARK_MUTATION, { payload });
-    node.hasBookmarked = true;
-    node.bookmarkRecordId = res.data.createOSavedPostContact.id;
+  try {
+    if (node.hasBookmarked) {
+      await fetchGraphQL(DELETE_POST_BOOKMARK_MUTATION, {
+        id: node.bookmarkRecordId,
+      });
+      node.hasBookmarked = false;
+      node.bookmarkRecordId = null;
+    } else {
+      const payload = { contact_id: GLOBAL_AUTHOR_ID, saved_post_id: node.id };
+      const res = await fetchGraphQL(CREATE_POST_BOOKMARK_MUTATION, {
+        payload,
+      });
+      node.hasBookmarked = true;
+      node.bookmarkRecordId = res.data.createOSavedPostContact.id;
+    }
+  } catch (err) {
+    console.log("error is", err);
+  } finally {
+    $(this).removeClass("state-disabled");
   }
 
   applyFilterAndRender();
 });
-
-let currentFilter = "Recent";
-let currentFileFilter = "All";
-
-let currentSearchTerm = "";
-const searchInput = document.getElementById("searchPost");
-const clearIcon = document.querySelector(".clearIcon");
-const searchIcon = document.querySelector(".searchIcon");
-let debounceTimer;
 
 function applyFilterAndRender() {
   let items = postsStore;
