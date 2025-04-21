@@ -287,10 +287,16 @@ $(document).on("click", ".btn-bookmark", async function () {
 });
 
 let currentFilter = "Recent";
+let currentFileFilter = "All";
+
+let currentSearchTerm = "";
+const searchInput = document.getElementById("searchPost");
+const clearIcon = document.querySelector(".clearIcon");
+const searchIcon = document.querySelector(".searchIcon");
+let debounceTimer;
 
 function applyFilterAndRender() {
-  let items = postsStore; // postsStore is already sorted DESC by published date
-
+  let items = postsStore;
   switch (currentFilter) {
     case "Featured":
       items = items.filter((p) => p.isFeatured);
@@ -301,9 +307,18 @@ function applyFilterAndRender() {
     case "Saved Posts":
       items = items.filter((p) => p.hasBookmarked);
       break;
-    // 'Recent' = no filter
   }
-
+  if (currentFileFilter !== "All") {
+    items = items.filter((p) => p.fileType === currentFileFilter);
+  }
+  if (currentSearchTerm) {
+    const q = currentSearchTerm.toLowerCase();
+    items = items.filter(
+      (p) =>
+        p.authorName.toLowerCase().includes(q) ||
+        p.content.toLowerCase().includes(q)
+    );
+  }
   $("#forum-root").html(tmpl.render(items));
 }
 
@@ -313,3 +328,88 @@ $(document).on("click", ".filter-btn", function () {
   $(this).addClass("active");
   applyFilterAndRender();
 });
+
+// toggle menu
+$("#file-filter-btn").on("click", function (e) {
+  e.stopPropagation();
+  $(".file-filter").toggleClass("open");
+});
+
+// pick a file type
+$(document).on("click", "#file-filter-menu li", function () {
+  const type = $(this).data("type");
+  currentFileFilter = type;
+
+  // update button label & active menu item
+  $("#file-filter-btn").text(type + " ▾");
+  $("#file-filter-menu li").removeClass("active");
+  $(this).addClass("active");
+
+  // close dropdown and re-render
+  $(".file-filter").removeClass("open");
+  applyFilterAndRender();
+});
+
+// click outside to close
+$(document).on("click", function (e) {
+  if (!$(e.target).closest(".file-filter").length) {
+    $(".file-filter").removeClass("open");
+  }
+});
+
+searchInput.addEventListener("input", (e) => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    const q = e.target.value.trim();
+    currentSearchTerm = q;
+    if (q) {
+      clearIcon.classList.remove("hidden");
+      searchIcon.classList.add("hidden");
+    } else {
+      clearIcon.classList.add("hidden");
+      searchIcon.classList.remove("hidden");
+    }
+    applyFilterAndRender();
+    removeHighlights(document.getElementById("forum-root"));
+    if (q) highlightMatches(document.getElementById("forum-root"), q);
+  }, 300);
+});
+
+clearIcon.addEventListener("click", () => {
+  searchInput.value = "";
+  clearIcon.classList.add("hidden");
+  searchIcon.classList.remove("hidden");
+  currentSearchTerm = "";
+  applyFilterAndRender();
+  removeHighlights(document.getElementById("forum-root"));
+});
+
+function highlightMatches(el, query) {
+  const terms = query.split(/\s+/).filter(Boolean);
+  const regex = new RegExp(
+    "(" +
+      terms.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") +
+      ")",
+    "gi"
+  );
+  traverse(el);
+
+  function traverse(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const txt = node.nodeValue;
+      if (regex.test(txt)) {
+        const span = document.createElement("span");
+        span.innerHTML = txt.replace(regex, "<mark>$1</mark>");
+        node.replaceWith(span);
+      }
+    } else {
+      node.childNodes.forEach(traverse);
+    }
+  }
+}
+
+function removeHighlights(el) {
+  el.querySelectorAll("mark").forEach((m) => {
+    m.replaceWith(document.createTextNode(m.textContent));
+  });
+}

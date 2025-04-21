@@ -39,12 +39,35 @@
     <canvas class="canvasWaveform" id="waveform" width="450" height="100"></canvas>
   </div>
 
-  <div id="post-filters" class="post-filters" style = "margin-bottom: 16px;">
+  <div id="post-filters" class="post-filters">
     <button class="filter-btn active" data-filter="Recent">Recent</button>
     <button class="filter-btn" data-filter="Featured">Featured Post</button>
     <button class="filter-btn" data-filter="My Posts">My Posts</button>
     <button class="filter-btn" data-filter="Saved Posts">Saved Post</button>
+  
+    <!-- new file‑type dropdown -->
+    <div class="file-filter">
+      <button id="file-filter-btn" class="filter-btn">All ▾</button>
+      <ul id="file-filter-menu" class="file-filter-menu">
+        <li data-type="All" class="active">All</li>
+        <li data-type="Image">Image</li>
+        <li data-type="Video">Video</li>
+        <li data-type="Audio">Audio</li>
+        <li data-type="File">File</li>
+      </ul>
+    </div>
   </div>
+
+  <div class="search-wrapper">
+    <input
+      type="text"
+      id="searchPost"
+      placeholder="Search by author or text…"
+      autocomplete="off"
+    />
+    <span class="clearIcon hidden">✕</span>
+    <span class="searchIcon">🔍</span>
+  </div>  
   
 
   <div id="forum-root"></div>

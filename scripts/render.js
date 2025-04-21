@@ -37,10 +37,10 @@ function mapItem(raw, depth = 0) {
     hasBookmarked,
     bookmarkRecordId,
     children: depth < 2 ? childrenRaw.map((c) => mapItem(c, depth + 1)) : [],
-    // children: depth < 2 ? childrenRaw.map((c) => mapItem(c, depth + 1)) : [],
     isCollapsed: true,
     forumPostId: depth === 0 ? raw.id : raw.forum_post_id,
     isFeatured: raw.featured_post === true,
+    fileType: raw.file_type || 'None',
   };
 }
 
