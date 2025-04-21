@@ -38,7 +38,7 @@ $(document).on("click", ".btn-comment", function () {
 
       <input type="file" class="file-input" style="display:none" />
       <button class="btn-submit-comment" data-uid="${uid}">
-        Submit
+        Post
       </button>
         </div>
 
