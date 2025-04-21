@@ -41,8 +41,23 @@ function mapItem(raw, depth = 0) {
     forumPostId: depth === 0 ? raw.id : raw.forum_post_id,
     isFeatured: raw.featured_post === true,
     fileType: raw.file_type || 'None',
-    fileContent: raw.file_content || null,
-    fileContentComment: raw.file || null,
+    fileContent:
+      typeof raw.file_content === 'string'
+        ? raw.file_content
+        : raw.file_content?.link || '',
+    fileContentName :
+      typeof raw.file_content === 'string'
+        ? raw.file_content
+        : raw.file_content?.name || '',
+
+    fileContentComment :
+    typeof raw.file === 'string'
+      ? raw.file
+      : raw.file?.link || null,
+    fileContentCommentName:
+      typeof raw.file === 'string'
+        ? raw.file
+        : raw.file?.name || '',
   };
 }
 

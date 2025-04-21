@@ -103,42 +103,42 @@
       <div class="file-preview my-2">
         {{if depth === 0}}
           {{if fileContent}}
-              {{if fileContent.link}}
+              {{if fileContent}}
                 {{if fileType === "Image"}}
-                  <img src="{{:fileContent.link}}" style="width:100%;height:300px;object-fit:cover;" alt="preview" />
+                  <img src="{{:fileContent}}" style="width:100%;height:300px;object-fit:cover;" alt="preview" />
                 {{else fileType === "Audio"}}
                   <audio class="js-player" controls>
-                    <source src="{{:fileContent.link}}" type="audio/mpeg" />
+                    <source src="{{:fileContent}}" type="audio/mpeg" />
                     Your browser does not support the audio tag.
                   </audio>
                 {{else fileType === "Video"}}
                   <video class="js-player" controls style="width: 100%; height: auto;">
-                    <source src="{{:fileContent.link}}" type="video/mp4" />
+                    <source src="{{:fileContent}}" type="video/mp4" />
                     Your browser does not support video.
                   </video>
                 {{else}}
-                  <div>{{:fileContent.name}}</div>
+                  <a href="{{:fileContent}}" target="_blank" class="line-clamp-1 cursor-pointer text-blue-600 hover:underline">{{:fileContentName}}</a>
                 {{/if}}
               {{/if}}
             {{/if}}
         {{/if}}
         {{if depth > 0}}
         {{if fileContentComment}}
-              {{if fileContentComment.link}}
+              {{if fileContentComment}}
                 {{if fileType === "Image"}}
-                  <img src="{{:fileContentComment.link}}" style="width:100%;height:300px;object-fit:cover;" alt="preview" />
+                  <img src="{{:fileContentComment || fileContentComment}}" style="width:100%;height:300px;object-fit:cover;" alt="preview" />
                 {{else fileType === "Audio"}}
                   <audio class="js-player" controls>
-                    <source src="{{:fileContentComment.link}}" type="audio/mpeg" />
+                    <source src="{{:fileContentComment}}" type="audio/mpeg" />
                     Your browser does not support the audio tag.
                   </audio>
                 {{else fileType === "Video"}}
                   <video class="js-player" controls style="width: 100%; height: auto;">
-                    <source src="{{:fileContentComment.link}}" type="video/mp4" />
+                    <source src="{{:fileContentComment}}" type="video/mp4" />
                     Your browser does not support video.
                   </video>
                 {{else}}
-                  <div>{{:fileContentComment.name}}</div>
+                  <div>{{:fileContentCommentName}}</div>
                 {{/if}}
               {{/if}}
             {{/if}}
