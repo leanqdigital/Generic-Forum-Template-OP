@@ -17,31 +17,22 @@ $(document).on("click", ".btn-comment", function () {
         ></div>
 
         <div class = "flex items-center gap-4 my-4">
-        <button type="button" class="upload-options">
-        Upload
-      </button>
 
-      <div class="upload-menu" style="display:none">
-        <button class="upload-choice" data-type="image">
-          Image
-        </button>
-        <button class="upload-choice" data-type="video">
-          Video
-        </button>
-        <button class="upload-choice" data-type="audio">
-          Audio
-        </button>
-        <button class="upload-choice" data-type="file">
-          File
-        </button>
+     <div class="upload-section">
+      <div class="flex item-center gap-4 my-4">
+        <button id="recordBtn" class="recordBtn">🎙 Start Recording</button>
       </div>
 
-      <input type="file" class="file-input" style="display:none" />
+      <input type="file" id="file-input" class="file-input" style="display: none;"
+        accept="image/*,audio/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+
+      <canvas class="canvasWaveform waveform" id="waveform" width="450" height="100"></canvas>
+
+    </div>
       <button class="btn-submit-comment" data-uid="${uid}">
         Post
       </button>
         </div>
-
 
       </div>
     `;
@@ -147,9 +138,7 @@ $(document).on("click", "#submit-post", async function () {
     fileData.size = fileData.size || pendingFile.size;
     fileData.type = fileData.type || pendingFile.type;
     finalPayload.file_content = JSON.stringify(fileData);
-    finalPayload.file_type =
-      pendingFileType.charAt(0).toUpperCase() +
-      pendingFileType.slice(1).toLowerCase();
+    finalPayload.file_type = fileTypeCheck;
   }
 
   try {
@@ -166,7 +155,6 @@ $(document).on("click", "#submit-post", async function () {
     formWrapper.classList.remove("state-disabled");
   }
 });
-
 $(document).on("click", ".btn-submit-comment", async function () {
   const $btn = $(this);
   const $form = $btn.closest(".comment-form");
@@ -207,9 +195,11 @@ $(document).on("click", ".btn-submit-comment", async function () {
     fileData.size = fileData.size || pendingFile.size;
     fileData.type = fileData.type || pendingFile.type;
     finalPayload.file = JSON.stringify(fileData);
-    finalPayload.file_type =
-      pendingFileType.charAt(0).toUpperCase() +
-      pendingFileType.slice(1).toLowerCase();
+    // finalPayload.file_type = 
+    //   pendingFileType.charAt(0).toUpperCase() +
+    //   pendingFileType.slice(1).toLowerCase();
+    finalPayload.file_type = fileTypeCheck;
+
   }
 
   try {

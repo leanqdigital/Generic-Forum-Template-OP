@@ -42,7 +42,7 @@ function mapItem(raw, depth = 0) {
     isFeatured: raw.featured_post === true,
     fileType: raw.file_type || 'None',
     fileContent: raw.file_content || null,
-    file: raw.file || null,
+    fileContentComment: raw.file || null,
   };
 }
 
