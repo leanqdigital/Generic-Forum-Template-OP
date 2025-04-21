@@ -112,6 +112,9 @@ $(document).on("click", ".btn-delete", function () {
 });
 
 $(document).on("click", "#submit-post", async function () {
+  requestAnimationFrame(() => {
+    Plyr.setup('.js-player');
+  });
   const $btn = $(this);
   const editor = $("#post-editor");
   const htmlContent = editor.html().trim();
@@ -303,6 +306,9 @@ const searchIcon = document.querySelector(".searchIcon");
 let debounceTimer;
 
 function applyFilterAndRender() {
+  requestAnimationFrame(() => {
+    Plyr.setup('.js-player');
+  });
   let items = postsStore;
   switch (currentFilter) {
     case "Featured":

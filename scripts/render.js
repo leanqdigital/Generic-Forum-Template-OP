@@ -40,7 +40,7 @@ function mapItem(raw, depth = 0) {
     isCollapsed: true,
     forumPostId: depth === 0 ? raw.id : raw.forum_post_id,
     isFeatured: raw.featured_post === true,
-    fileType: raw.file_type || "None",
+    fileType: raw.file_type || 'None',
   };
 }
 
@@ -57,4 +57,13 @@ const tmpl = $.templates("#tmpl-item");
 
 function renderAll() {
   $("#forum-root").html(tmpl.render(postsStore));
+  initPlyr();
+}
+
+function initPlyr() {
+  if (window.Plyr) {
+    Plyr.setup('.js-player');
+  } else {
+    console.error("Plyr not loaded");
+  }
 }
