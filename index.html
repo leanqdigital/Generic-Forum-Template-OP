@@ -4,12 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Forum Feed</title>
-  <script src="https://cdn.tailwindcss.com"></script>
 
   <link rel="stylesheet" href="styles/style.css">
-      <!-- ✅ Plyr -->
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css" />
-      <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.polyfilled.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ✅ Plyr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css" />
+  <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.polyfilled.min.js"></script>
   <!-- Plyr CSS -->
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
   <!-- Plyr JS -->
@@ -65,16 +66,17 @@
         <button id="file-filter-btn" class="filter-btn">All ▾</button>
         <ul id="file-filter-menu"
           class="file-filter-menu absolute top-[100%] right-0 bg-[#ffffff] border border-1-[#ccc] list-style-none p-0 mr-[4px] min-w-[6em] z-[10]">
-          <li class = "py-2 px-8 cursor-pointer" data-type="All" class="active">All</li>
-          <li class = "py-2 px-8 cursor-pointer" data-type="Image">Image</li>
-          <li class = "py-2 px-8 cursor-pointer" data-type="Video">Video</li>
-          <li class = "py-2 px-8 cursor-pointer" data-type="Audio">Audio</li>
-          <li class = "py-2 px-8 cursor-pointer" data-type="File">File</li>
+          <li class="py-2 px-8 cursor-pointer" data-type="All" class="active">All</li>
+          <li class="py-2 px-8 cursor-pointer" data-type="Image">Image</li>
+          <li class="py-2 px-8 cursor-pointer" data-type="Video">Video</li>
+          <li class="py-2 px-8 cursor-pointer" data-type="Audio">Audio</li>
+          <li class="py-2 px-8 cursor-pointer" data-type="File">File</li>
         </ul>
       </div>
     </div>
     <div class="search-wrapper w-full my-4 relative border border-1-[#ccc]">
-      <input type="text" id="searchPost" class = "py-2 px-4 rounded text-sm" placeholder="Search by author or text…" autocomplete="off" />
+      <input type="text" id="searchPost" class="py-2 px-4 rounded text-sm" placeholder="Search by author or text…"
+        autocomplete="off" />
       <span class="clearIcon hidden absolute top-[50%] right-[8px] cursor-pointer text-sm translate-y-[-50%]">✕</span>
       <span class="searchIcon absolute top-[50%] right-[8px] cursor-pointer text-sm translate-y-[-50%]">🔍</span>
     </div>
@@ -100,45 +102,64 @@
           <span class="timestamp text-sm text-[#65676b] ml-2">{{:timeAgo}}</span>
         </div>
       </div>
-      <div class="content">{{:content}}</div>
-      <div class="file-preview">
-  {{if fileType && fileContent.link}}
-    {{if fileType === "Image"}}
-      <img src="{{:fileContent.link}}" style="width:100%;height:300px;object-fit:contain;" alt="preview" />
-    {{else fileType === "Audio"}}
-       <audio class="js-player" controls>
-    <source src="{{:fileContent.link}}" type="audio/mpeg" />
-    Your browser does not support the audio tag.
-  </audio>
-    {{else fileType === "Video"}}
-      <video class="js-player"controls style="width: 100%; height: auto;">
-  <source src="{{:fileContent.link}}" type="video/mp4">
-  Your browser does not support video.
-</video>
+      <div class="content my-2">{{:content}}</div>
+      <div class="file-preview my-2">
 
-    {{else}}
-<div> {{:fileContent.name}}</div>
-    {{/if}}
-  {{/if}}
+        {{if depth === 0}}
+          {{if fileType && fileContent.link || ""}}
+            {{if fileType === "Image"}}
+              <img src="{{:fileContent.link}}" style="width:100%;height:300px;object-fit:contain;" alt="preview" />
+              {{else fileType === "Audio"}}
+                <audio class="js-player" controls>
+                  <source src="{{:fileContent.link}}" type="audio/mpeg" />
+                    Your browser does not support the audio tag.
+                </audio>
+              {{else fileType === "Video"}}
+                <video class="js-player"controls style="width: 100%; height: auto;">
+                  <source src="{{:fileContent.link}}" type="video/mp4">
+                  Your browser does not support video.
+                </video>
+              {{else}}
+              <div> {{:fileContent.name}}</div>
+            {{/if}}
+          {{/if}}
+        {{/if}}
+        {{if depth > 2}}
+        {{if fileType && file.link || ""}}
+          {{if fileType === "Image"}}
+            <img src="{{:file.link}}" style="width:100%;height:300px;object-fit:contain;" alt="preview" />
+            {{else fileType === "Audio"}}
+              <audio class="js-player" controls>
+                <source src="{{:file.link}}" type="audio/mpeg" />
+                  Your browser does not support the audio tag.
+              </audio>
+            {{else fileType === "Video"}}
+              <video class="js-player"controls style="width: 100%; height: auto;">
+                <source src="{{:file.link}}" type="video/mp4">
+                Your browser does not support video.
+              </video>
+            {{else}}
+            <div> {{:file.name}}</div>
+          {{/if}}
+        {{/if}}
+      {{/if}}
+
 </div>
 
       <div class="actions">
-        <button
-        class="btn-like{{:hasUpvoted ? ' liked' : ''}}"
-        data-uid="{{:uid}}">
-        {{:hasUpvoted ? 'Unlike' : 'Like'}} ({{:upvotes}})
-      </button>
-      {{if depth < 2}}
-        <button class="btn-comment" data-uid="{{:uid}}">Comment</button>
-      {{/if}}
-      {{if depth === 0}}
-        <button
-          class="btn-bookmark{{:hasBookmarked ? ' bookmarked' : ''}}"
-          data-uid="{{:uid}}">
-          {{:hasBookmarked ? 'Bookmarked' : 'Bookmark'}}
-        </button>
-      {{/if}}
+        <div class = "flex items-center justify-between">
+          <div class = "flex items-center gap-4">
+            <button class="btn-like{{:hasUpvoted ? ' liked' : ''}}" data-uid="{{:uid}}">{{:hasUpvoted ? 'Unlike' : 'Like'}} ({{:upvotes}})</button>
+            {{if depth < 2}}
+              <button class="btn-comment" data-uid="{{:uid}}">Comment</button>
+            {{/if}}
+          </div>
+          {{if depth === 0}}
+            <button class="btn-bookmark{{:hasBookmarked ? ' bookmarked' : ''}}" data-uid="{{:uid}}">{{:hasBookmarked ? 'Bookmarked' : 'Bookmark'}}</button>
+          {{/if}}
+        </div>
       </div>
+
       {{if depth < 2}}
         <div class="ribbon w-full my-4 py-2 bg-[#e9ebee] text-center cursor-pointer text-sm hover:bg-[#007bff] hover:text-white" data-uid="{{:uid}}">
           {{:children.length}} {{:children.length === 1 ? 'Comment' : 'Comments'}}

@@ -22,29 +22,24 @@ body {
 }
 
 button {
+  background: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  font-size: 12px !important;
+  line-height: normal;
+  transition: 0.2s ease-in-out;
   padding: 8px 10px !important;
   cursor: pointer;
   width: max-content;
-}
-.plyr--audio{
-  background-color: var(--neutral) !important;
-  border: 1px solid var(--neutral) !important;
-}
-#forum-root {
-  width: 100%;
-  max-width: 600px;
-}
-
-.item {
-  background: #fff;
-  cursor: pointer;
-  font-size: 12px;
-  line-height: normal;
-  transition: 0.2s ease-in-out;
   &:hover {
     background: var(--primary);
     color: white;
   }
+}
+
+.plyr--audio {
+  background-color: var(--neutral) !important;
+  border: 1px solid var(--neutral) !important;
 }
 
 .btn-delete {
