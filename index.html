@@ -86,7 +86,7 @@
 
   <script id="tmpl-item" type="text/x-jsrender">
     <div 
-      class="item rounded shadow-xl my-4 p-4 relative border-2 border-[#e9ebee]" 
+      class="item rounded shadow-xl flex flex-col gap-2 my-4 p-4 relative border-2 border-[#e9ebee]" 
       data-uid="{{:uid}}" 
       data-depth="{{:depth}}">
       {{if canDelete}}
@@ -104,7 +104,6 @@
       </div>
       <div class="content my-2">{{:content}}</div>
       <div class="file-preview my-2">
-
         {{if depth === 0}}
           {{if fileType && fileContent.link || ""}}
             {{if fileType === "Image"}}
