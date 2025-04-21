@@ -129,3 +129,75 @@ let GQL_QUERY = `
     }
   }
 `;
+
+let CREATE_POST_VOTE_MUTATION = `
+  mutation createMemberPostUpvotesPostUpvotes(
+    $payload: MemberPostUpvotesPostUpvotesCreateInput = null
+  ) {
+    createMemberPostUpvotesPostUpvotes(payload: $payload) {
+      id
+      member_post_upvote_id
+      post_upvote_id
+    }
+  }
+`;
+
+let DELETE_POST_VOTE_MUTATION = `
+  mutation deleteMemberPostUpvotesPostUpvotes(
+    $id: EduflowproMemberPostUpvotesPostUpvotesID
+  ) {
+    deleteMemberPostUpvotesPostUpvotes(
+      query: [{ where: { id: $id } }]
+    ) {
+      id
+    }
+  }
+`;
+
+let CREATE_POST_BOOKMARK_MUTATION = `
+  mutation createOSavedPostContact(
+    $payload: OSavedPostContactCreateInput = null
+  ) {
+    createOSavedPostContact(payload: $payload) {
+      id
+      saved_post_id
+      contact_id
+    }
+  }
+`;
+
+let DELETE_POST_BOOKMARK_MUTATION = `
+  mutation deleteOSavedPostContact(
+    $id: EduflowproOSavedPostContactID
+  ) {
+    deleteOSavedPostContact(query: [{ where: { id: $id } }]) {
+      id
+    }
+  }
+`;
+
+let CREATE_COMMENT_VOTE_MUTATION = `
+  mutation createMemberCommentUpvotesForumCommentUpvotes(
+    $payload: MemberCommentUpvotesForumCommentUpvotesCreateInput = null
+  ) {
+    createMemberCommentUpvotesForumCommentUpvotes(
+      payload: $payload
+    ) {
+      id
+      forum_comment_upvote_id
+      member_comment_upvote_id
+    }
+  }
+`;
+
+let DELETE_COMMENT_VOTE_MUTATION = `
+  mutation deleteMemberCommentUpvotesForumCommentUpvotes(
+    $id: EduflowproMemberCommentUpvotesForumCommentUpvotesID
+  ) {
+    deleteMemberCommentUpvotesForumCommentUpvotes(
+      query: [{ where: { id: $id } }]
+    ) {
+      id
+    }
+  }
+`;

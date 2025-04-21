@@ -1,3 +1,16 @@
+:root {
+  --primary: #007bff;
+  --secondary: #6c757d;
+  --accent: #e83e8c;
+  --success: #28a745;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --info: #17a2b8;
+  --light: #f8f9fa;
+  --dark: #343a40;
+  --neutral: #adb5bd;
+}
+
 body {
   background: #f0f2f5;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -122,4 +135,68 @@ button {
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 0.5rem;
+}
+
+.filepond--file,
+.filepond--image-preview {
+  background-color: var(--primary) !important;
+}
+
+.filepond--drop-label:hover {
+  background: var(--primary);
+}
+
+/* styling for cross button */
+.filepond--file-action-button {
+  background-color: var(--accent) !important;
+}
+
+.filepond--credits {
+  display: none;
+}
+
+.demo {
+  text-align: center;
+  font-family: Helvetica;
+  margin: 4em auto;
+  width: 450px;
+}
+
+.canvasWaveform {
+  margin-top: 1em;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  display: none;
+}
+
+.filepond--drop-label {
+  padding: 2em;
+  border-radius: 8px;
+  font-family: Helvetica, sans-serif;
+  font-size: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.custom-upload-icon {
+  font-size: 2em;
+  margin-bottom: 0.5em;
+}
+
+.filepond--panel-top,
+.filepond--panel-bottom,
+.filepond--panel-center {
+  background-color: var(--warning) !important;
+  cursor: pointer;
+}
+
+
+.btn-like.liked,
+.btn-bookmark.bookmarked {
+  background-color: #333;
+  color: #fff;
 }

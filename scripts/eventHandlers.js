@@ -228,3 +228,60 @@ function removeNode(arr, uid) {
   }
   return false;
 }
+
+// HANDLE LIKE / UNLIKE
+$(document).on("click", ".btn-like", async function () {
+  const uid = $(this).data("uid");
+  const node = findNode(postsStore, uid);
+  const isPost = node.depth === 0;
+
+  if (node.hasUpvoted) {
+    await fetchGraphQL(
+      isPost ? DELETE_POST_VOTE_MUTATION : DELETE_COMMENT_VOTE_MUTATION,
+      { id: node.voteRecordId }
+    );
+    node.upvotes--;
+    node.hasUpvoted = false;
+    node.voteRecordId = null;
+  } else {
+    const payload = isPost
+      ? { post_upvote_id: node.id, member_post_upvote_id: GLOBAL_AUTHOR_ID }
+      : {
+          forum_comment_upvote_id: node.id,
+          member_comment_upvote_id: GLOBAL_AUTHOR_ID,
+        };
+    const mutation = isPost
+      ? CREATE_POST_VOTE_MUTATION
+      : CREATE_COMMENT_VOTE_MUTATION;
+    const res = await fetchGraphQL(mutation, { payload });
+    const newId =
+      res.data.createMemberPostUpvotesPostUpvotes?.id ||
+      res.data.createMemberCommentUpvotesForumCommentUpvotes?.id;
+    node.upvotes++;
+    node.hasUpvoted = true;
+    node.voteRecordId = newId;
+  }
+
+  renderAll();
+});
+
+// HANDLE BOOKMARK / UNBOOKMARK (posts only)
+$(document).on("click", ".btn-bookmark", async function () {
+  const uid = $(this).data("uid");
+  const node = findNode(postsStore, uid);
+
+  if (node.hasBookmarked) {
+    await fetchGraphQL(DELETE_POST_BOOKMARK_MUTATION, {
+      id: node.bookmarkRecordId,
+    });
+    node.hasBookmarked = false;
+    node.bookmarkRecordId = null;
+  } else {
+    const payload = { contact_id: GLOBAL_AUTHOR_ID, saved_post_id: node.id };
+    const res = await fetchGraphQL(CREATE_POST_BOOKMARK_MUTATION, { payload });
+    node.hasBookmarked = true;
+    node.bookmarkRecordId = res.data.createOSavedPostContact.id;
+  }
+
+  renderAll();
+});
