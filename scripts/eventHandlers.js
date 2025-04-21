@@ -19,7 +19,7 @@ $(document).on("click", ".btn-comment", function () {
               </div>
               <input type="file" id="file-input" class="file-input" style="display: none;"
                   accept="image/*,audio/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-              <canvas class="canvasWaveform waveform" id="waveform" width="450" height="100"></canvas>
+              <canvas class="canvasWaveform waveform w-full" id="waveform" width="450" height="100"></canvas>
           </div>
       </div>
     </div>
@@ -140,6 +140,7 @@ $(document).on("click", "#submit-post", async function () {
     console.error("Post failed", err);
   } finally {
     $btn.prop("disabled", false);
+    document.querySelector(".filepond--action-remove-item").click();
     $("#upload-options").prop("disabled", false);
     formWrapper.classList.remove("state-disabled");
   }
