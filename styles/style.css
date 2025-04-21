@@ -28,14 +28,19 @@ button {
   font-size: 12px !important;
   line-height: normal;
   transition: 0.2s ease-in-out;
-  padding: 8px 10px !important;
   cursor: pointer;
   width: max-content;
+
+  &:not(.plyr__control) {
+    padding: 8px 10px !important;
+  }
+
   &:hover {
     background: var(--primary);
     color: white;
   }
 }
+
 
 .btn-delete {
   position: absolute;
@@ -113,10 +118,6 @@ button {
   cursor: pointer;
 }
 
-.filepond--file-action-button {
-  padding: 0 !important;
-}
-
 .filepond--file,
 .filepond--image-preview {
   background-color: var(--primary) !important;
@@ -155,10 +156,6 @@ button {
   cursor: pointer;
 }
 
-.plyr__control {
-  padding: 15px !important;
-}
-
 .plyr--audio {
   background-color: var(--neutral) !important;
   border: 1px solid var(--neutral) !important;
@@ -177,4 +174,7 @@ button {
   background: #f0f0f0;
   border: 1px solid #ccc;
   display: none;
+}
+.filepond--action-remove-item {
+  padding: 0 !important;
 }
