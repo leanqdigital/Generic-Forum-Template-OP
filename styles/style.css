@@ -9,7 +9,7 @@
   --light: #f8f9fa;
   --dark: #343a40;
   --neutral: #adb5bd;
-  --plyr-color-main: #e63946;
+  --plyr-color-main: var(--primary);
 }
 
 body {
@@ -36,7 +36,12 @@ button {
     color: white;
   }
 }
-
+.filepond--file-action-button{
+  padding: 0 !important;
+}
+.plyr__control{
+  padding: 15px !important;
+}
 .plyr--audio {
   background-color: var(--neutral) !important;
   border: 1px solid var(--neutral) !important;
