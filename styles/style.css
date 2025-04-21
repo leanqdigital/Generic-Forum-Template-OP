@@ -260,12 +260,14 @@ button {
   position: relative;
   margin-left: 1em;
 }
+
 #searchPost {
   padding: 0.4em 1.5em 0.4em 0.5em;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 0.9em;
 }
+
 .search-wrapper .searchIcon,
 .search-wrapper .clearIcon {
   position: absolute;
@@ -275,6 +277,7 @@ button {
   cursor: pointer;
   font-size: 0.9em;
 }
+
 .clearIcon.hidden {
   display: none;
 }
