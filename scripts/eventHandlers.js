@@ -14,9 +14,11 @@ $(document).on("click", ".btn-comment", function (e) {
   const $form = $(`
     <div class="comment-form my-2">
       <div class="editor min-h-[80px] resize-y p-2 rounded" contenteditable="true" data-placeholder="Write a reply..."></div>
-      <div class="upload-section w-full mt-2">
+      <div class="upload-section w-full mt-2 flex flex-col gap-2">
+        <div class="flex items-center gap-2">
         <button id="recordBtn" class="recordBtn">🎙 Start Recording</button>
         <button class="btn-submit-comment" data-uid="${uid}">Post</button>
+        </div>
         <input type="file" id="file-input" class="file-input" style="display: none;"
           accept="image/*,audio/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
         <canvas class="canvasWaveform waveform w-full mt-2" id="waveform" width="450" height="100"></canvas>
