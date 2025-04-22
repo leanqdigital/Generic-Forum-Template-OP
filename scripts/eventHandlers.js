@@ -34,12 +34,8 @@ $(document).on("click", ".btn-comment", function (e) {
     initFilePond();
   }
 });
-
-
-
 $(document).on("click", function (e) {
   if (!$(e.target).closest(".comment-form, #post-creation-form").length) {
-    $(".comment-form").remove();
     $("#upload-menu").hide();
   }
 });
