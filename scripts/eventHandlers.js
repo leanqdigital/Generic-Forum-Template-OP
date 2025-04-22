@@ -1,34 +1,41 @@
-$(document).on("click", ".btn-comment", function () {
+$(document).on("click", ".btn-comment", function (e) {
+  e.stopPropagation();
   const uid = $(this).data("uid");
   const container = $(this).closest(".item");
   const existing = container.find(".comment-form");
+
   if (existing.length) {
     existing.remove();
     return;
   }
 
   $(".comment-form").remove();
-  const form = `
+
+  const $form = $(`
     <div class="comment-form my-2">
       <div class="editor min-h-[80px] resize-y p-2 rounded" contenteditable="true" data-placeholder="Write a reply..."></div>
-      <div class="flex items-center gap-4 my-4">
-          <div class="upload-section w-full">
-              <div class="flex item-center gap-4 my-4">
-                  <button id="recordBtn" class="recordBtn">🎙 Start Recording</button>
-                  <button class="btn-submit-comment" data-uid="${uid}">Post</button>
-              </div>
-              <input type="file" id="file-input" class="file-input" style="display: none;"
-                  accept="image/*,audio/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
-              <canvas class="canvasWaveform waveform w-full" id="waveform" width="450" height="100"></canvas>
-          </div>
+      <div class="upload-section w-full mt-2">
+        <button id="recordBtn" class="recordBtn">🎙 Start Recording</button>
+        <button class="btn-submit-comment" data-uid="${uid}">Post</button>
+        <input type="file" id="file-input" class="file-input" style="display: none;"
+          accept="image/*,audio/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+        <canvas class="canvasWaveform waveform w-full mt-2" id="waveform" width="450" height="100"></canvas>
       </div>
     </div>
-    `;
-  container.append(form);
-  container.find(".children").addClass("visible");
-  initFilePond();
-  tribute.attach(form.find(".editor")[0]);
+  `);
+  container.append($form);
+  const inserted = container.find(".comment-form");
+  if (inserted.length) {
+    const editorEl = inserted.find(".editor")[0];
+    if (editorEl) {
+      tribute.attach(editorEl);
+    }
+    container.find(".children").addClass("visible");
+    initFilePond();
+  }
 });
+
+
 
 $(document).on("click", function (e) {
   if (!$(e.target).closest(".comment-form, #post-creation-form").length) {
