@@ -11,3 +11,8 @@ $(document).ready(() => {
 
   connect();
 });
+
+
+function attachTribute(){
+  tribute.attach(document.querySelector(".editor")[0]);
+}

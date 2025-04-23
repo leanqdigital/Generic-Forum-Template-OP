@@ -8,6 +8,7 @@ $(document).on("click", ".btn-comment", function () {
   }
 
   $(".comment-form").remove();
+
   const form = `
     <div class="comment-form my-2">
       <div class="editor min-h-[80px] resize-y p-2 rounded" contenteditable="true" data-placeholder="Write a reply..."></div>
@@ -24,10 +25,17 @@ $(document).on("click", ".btn-comment", function () {
       </div>
     </div>
     `;
+
   container.append(form);
+
+
   container.find(".children").addClass("visible");
+  const commentForm = container.nextElementSibling(".comment-form")
+  console.log("Comment form is", commentForm);
+  // const editor = commentForm.querySelector(".editor");
+  console.log(editor);
+
   initFilePond();
-  tribute.attach(form.find(".editor")[0]);
 });
 
 $(document).on("click", function (e) {
@@ -56,17 +64,17 @@ $(document).on("click", ".btn-delete", function () {
   const $item = $(this).closest(".item");
   $item.addClass("state-disabled");
 
-  let node;
-  (function find(arr) {
-    for (const x of arr) {
-      if (x.uid === uid) {
-        node = x;
-        return;
-      }
-      find(x.children);
-      if (node) return;
-    }
-  })(postsStore);
+  // let node;
+  // (function find(arr) {
+  //   for (const x of arr) {
+  //     if (x.uid === uid) {
+  //       node = x;
+  //       return;
+  //     }
+  //     find(x.children);
+  //     if (node) return;
+  //   }
+  // })(postsStore);
 
   const mutation =
     node.depth === 0
@@ -87,7 +95,7 @@ $(document).on("click", ".btn-delete", function () {
 
 $(document).on("click", "#submit-post", async function () {
   requestAnimationFrame(() => {
-    Plyr.setup('.js-player');
+    Plyr.setup(".js-player");
   });
   const $btn = $(this);
   const formWrapper = document.querySelector(".post-form ");
@@ -145,6 +153,7 @@ $(document).on("click", "#submit-post", async function () {
     formWrapper.classList.remove("state-disabled");
   }
 });
+
 $(document).on("click", ".btn-submit-comment", async function () {
   const $btn = $(this);
   const $form = $btn.closest(".comment-form");
@@ -185,11 +194,10 @@ $(document).on("click", ".btn-submit-comment", async function () {
     fileData.size = fileData.size || pendingFile.size;
     fileData.type = fileData.type || pendingFile.type;
     finalPayload.file = JSON.stringify(fileData);
-    // finalPayload.file_type = 
+    // finalPayload.file_type =
     //   pendingFileType.charAt(0).toUpperCase() +
     //   pendingFileType.slice(1).toLowerCase();
     finalPayload.file_type = fileTypeCheck;
-
   }
 
   try {
@@ -292,7 +300,7 @@ $(document).on("click", ".btn-bookmark", async function () {
 
 function applyFilterAndRender() {
   requestAnimationFrame(() => {
-    Plyr.setup('.js-player');
+    Plyr.setup(".js-player");
   });
   let items = postsStore;
   switch (currentFilter) {
