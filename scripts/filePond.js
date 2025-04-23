@@ -6,7 +6,6 @@ FilePond.registerPlugin(
 );
 
 function initFilePond() {
-  console.log("Initialized");
   document.querySelectorAll(".upload-section").forEach((section) => {
     const inputElement = section.querySelector(".file-input");
     const recordBtn = section.querySelector(".recordBtn");
