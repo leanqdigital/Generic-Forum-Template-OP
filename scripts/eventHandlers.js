@@ -45,16 +45,11 @@ $(document).on("click", function (e) {
 
 $(document).on("click", ".ribbon", function () {
   const uid = $(this).data("uid");
-  (function find(arr) {
-    for (const x of arr) {
-      if (x.uid === uid) {
-        x.isCollapsed = !x.isCollapsed;
-        applyFilterAndRender();
-        return;
-      }
-      find(x.children);
-    }
-  })(postsStore);
+  let node = findNode(postsStore, uid);
+  if (node) {
+    node.isCollapsed = !node.isCollapsed;
+    applyFilterAndRender();
+  }
 });
 
 $(document).on("click", ".btn-delete", function () {

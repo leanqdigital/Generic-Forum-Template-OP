@@ -1,3 +1,21 @@
+function mergeWithExisting(existingPosts, newRawPosts, depth = 0) {
+  return newRawPosts.map(newRaw => {
+    // Find existing post by ID to preserve its state
+    const existingPost = existingPosts.find(p => p.id === newRaw.id);
+    // Map the raw data to a post object
+    const mappedPost = mapItem(newRaw, depth);
+
+    if (existingPost) {
+      // Preserve the isCollapsed state from the existing post
+      mappedPost.isCollapsed = existingPost.isCollapsed;
+      // Recursively merge children (comments/replies)
+      const rawChildren = newRaw.ForumComments || [];
+      mappedPost.children = mergeWithExisting(existingPost.children, rawChildren, depth + 1);
+    }
+
+    return mappedPost;
+  });
+}
 
 function mapItem(raw, depth = 0) {
   const childrenRaw = safeArray(raw.ForumComments);

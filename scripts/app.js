@@ -29,8 +29,9 @@ function connect() {
       msg.payload?.data
     ) {
       const raws = msg.payload.data.subscribeToForumPosts ?? [];
-      postsStore = raws.map((r) => mapItem(r, 0));
-      applyFilterAndRender();  
+      // Merge new data with existing posts to preserve UI state
+      postsStore = mergeWithExisting(postsStore, raws);
+      applyFilterAndRender(); 
       // iniitilize plyr js 
       requestAnimationFrame(() => {
         Plyr.setup('.js-player');
