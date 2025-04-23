@@ -70,4 +70,8 @@ function findNode(arr, uid) {
   return null;
 }
 
+<<<<<<< HEAD
 const tmpl = $.templates("#tmpl-item");
+=======
+const tmpl = $.templates("#tmpl-item");
+>>>>>>> 43c3a4c04ecb95b88b493feb9048a980a470d027
