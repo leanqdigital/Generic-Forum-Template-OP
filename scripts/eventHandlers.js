@@ -61,17 +61,17 @@ $(document).on("click", ".btn-delete", function () {
   const $item = $(this).closest(".item");
   $item.addClass("state-disabled");
 
-  // let node;
-  // (function find(arr) {
-  //   for (const x of arr) {
-  //     if (x.uid === uid) {
-  //       node = x;
-  //       return;
-  //     }
-  //     find(x.children);
-  //     if (node) return;
-  //   }
-  // })(postsStore);
+  let node;
+  (function find(arr) {
+    for (const x of arr) {
+      if (x.uid === uid) {
+        node = x;
+        return;
+      }
+      find(x.children);
+      if (node) return;
+    }
+  })(postsStore);
 
   const mutation =
     node.depth === 0
