@@ -1,9 +1,10 @@
 FilePond.registerPlugin(
   FilePondPluginFileValidateType,
   FilePondPluginImagePreview,
-  FilePondPluginMediaPreview,
-  FilePondPluginFilePoster
+  FilePondPluginMediaPreview,   // ✅ needed
+  FilePondPluginFilePoster      // optional
 );
+
 
 function initFilePond() {
   document.querySelectorAll(".upload-section").forEach((section) => {
@@ -18,17 +19,32 @@ function initFilePond() {
       allowVideoPreview: true,
       allowFilePoster: true,
       allowMultiple: false,
+      allowMediaPreview: true,
       acceptedFileTypes: [
         "image/*",
         "audio/*",
+        "video/webm",  
+        "audio/webm", 
         "video/*",
         "application/pdf",
         "application/msword",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       ],
+
       labelIdle: `<span class="custom-upload-label" style="background:transparent; color:white;">
                 📁 <strong>Drag & drop your files</strong> or <span style="color:var(--accent)">Browse</span>
             </span>`,
+    });
+
+    pond.on('addfile', (error, fileItem) => {
+      if (!error && fileItem.file.type === "audio/webm") {
+        const audioEl = document.createElement("audio");
+        audioEl.src = URL.createObjectURL(fileItem.file);
+        audioEl.controls = true;
+        audioEl.style.width = "100%";
+        audioEl.classList.add("mt-2", "rounded");
+        fileItem.container.appendChild(audioEl);
+      }
     });
 
     const recorder = new MicRecorder({ bitRate: 128 });
@@ -37,7 +53,6 @@ function initFilePond() {
 
     const drawWaveform = () => {
       if (!analyser) return;
-
       analyser.getByteTimeDomainData(dataArray);
       ctx.fillStyle = "#f0f0f0";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -96,9 +111,9 @@ function initFilePond() {
                   if (event.data.size > 0) recordedChunks.push(event.data);
                 };
                 safariRecorder.onstop = () => {
-                  const blob = new Blob(recordedChunks, { type: "audio/webm" });
-                  const file = new File([blob], "recorded-audio.webm", {
-                    type: "audio/webm",
+                  const blob = new Blob(recordedChunks, { type: "audio/mp3" });
+                  const file = new File([blob], "recorded-audio.mp3", {
+                    type: "audio/mp3",
                     lastModified: Date.now(),
                   });
 
