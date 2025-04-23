@@ -145,7 +145,11 @@ $(document).on("click", "#submit-post", async function () {
     console.error("Post failed", err);
   } finally {
     $btn.prop("disabled", false);
-    document.querySelector(".filepond--action-remove-item").click();
+    const filepondCloseButton = document.querySelector(".filepond--action-remove-item");
+    if (filepondCloseButton) {
+      filepondCloseButton.click();
+    }
+
     $("#upload-options").prop("disabled", false);
     formWrapper.classList.remove("state-disabled");
   }
