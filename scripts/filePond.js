@@ -32,7 +32,6 @@ function initFilePond() {
     });
 
     const recorder = new MicRecorder({ bitRate: 128 });
-
     let isRecording = false;
     let audioContext, analyser, dataArray, source, animationId, mediaStream;
 
@@ -64,6 +63,8 @@ function initFilePond() {
 
     if (recordBtn) {
       recordBtn.addEventListener("click", () => {
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
         if (!isRecording) {
           pond.setOptions({
             allowBrowse: false,
@@ -72,12 +73,14 @@ function initFilePond() {
           });
           inputElement.disabled = true;
           canvas.style.display = "block";
+
+          const audioConstraints = isSafari ? { audio: {} } : { audio: { sampleRate: 44100 } };
+
           navigator.mediaDevices
-            .getUserMedia({ audio: true })
+            .getUserMedia(audioConstraints)
             .then((stream) => {
               mediaStream = stream;
-              audioContext = new (window.AudioContext ||
-                window.webkitAudioContext)();
+              audioContext = new (window.AudioContext || window.webkitAudioContext)();
               analyser = audioContext.createAnalyser();
               source = audioContext.createMediaStreamSource(stream);
               source.connect(analyser);
@@ -86,61 +89,108 @@ function initFilePond() {
 
               drawWaveform();
 
-              recorder.start().then(() => {
+              if (isSafari) {
+                const recordedChunks = [];
+                const safariRecorder = new MediaRecorder(stream);
+                safariRecorder.ondataavailable = (event) => {
+                  if (event.data.size > 0) recordedChunks.push(event.data);
+                };
+                safariRecorder.onstop = () => {
+                  const blob = new Blob(recordedChunks, { type: "audio/webm" });
+                  const file = new File([blob], "recorded-audio.webm", {
+                    type: "audio/webm",
+                    lastModified: Date.now(),
+                  });
+
+                  canvas.style.display = "none";
+                  mediaStream?.getTracks().forEach((track) => track.stop());
+                  pond.setOptions({
+                    allowBrowse: true,
+                    allowDrop: true,
+                    allowPaste: true
+                  });
+                  inputElement.disabled = false;
+
+                  pond.addFile(file).then(() => {
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    inputElement.files = dataTransfer.files;
+                    pendingFile = file;
+                    fileTypeCheck = "Audio";
+
+                    const nativeEvent = new Event("change", { bubbles: true });
+                    inputElement.dispatchEvent(nativeEvent);
+                    $(inputElement).trigger("change");
+                  });
+                };
+
+                safariRecorder.start();
                 isRecording = true;
                 recordBtn.textContent = "⏹ Stop Recording";
-              });
+                recordBtn._safariRecorder = safariRecorder;
+              } else {
+                recorder.start().then(() => {
+                  isRecording = true;
+                  recordBtn.textContent = "⏹ Stop Recording";
+                });
+              }
             })
-            .catch((e) => console.error(e));
+            .catch((e) => {
+              console.error("Mic access failed:", e.name, e.message);
+              recordBtn.textContent = "🎙 Start Recording";
+              inputElement.disabled = false;
+              canvas.style.display = "none";
+            });
+
         } else {
           cancelAnimationFrame(animationId);
           canvas.style.display = "none";
           mediaStream?.getTracks().forEach((track) => track.stop());
-          
-          recorder
-            .stop()
-            .getMp3()
-            .then(([buffer, blob]) => {
-              isRecording = false;
-              recordBtn.textContent = "🎙 Start Recording";
 
-              const file = new File(buffer, "recorded-audio.mp3", {
-                type: blob.type,
-                lastModified: Date.now(),
-              });
-              // ✅ Re-enable FilePond interaction
-              pond.setOptions({
-                allowBrowse: true,
-                allowDrop: true,
-                allowPaste: true
-              });
-              inputElement.disabled = false;
-              // Add to FilePond
-              pond.addFile(file).then(() => {
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                inputElement.files = dataTransfer.files;
-                pendingFile = file;
-                if (file.type.startsWith("audio/")) {
+          if (isSafari && recordBtn._safariRecorder) {
+            recordBtn._safariRecorder.stop();
+            recordBtn.textContent = "🎙 Start Recording";
+            isRecording = false;
+          } else {
+            recorder
+              .stop()
+              .getMp3()
+              .then(([buffer, blob]) => {
+                isRecording = false;
+                recordBtn.textContent = "🎙 Start Recording";
+
+                const file = new File(buffer, "recorded-audio.mp3", {
+                  type: blob.type,
+                  lastModified: Date.now(),
+                });
+
+                pond.setOptions({
+                  allowBrowse: true,
+                  allowDrop: true,
+                  allowPaste: true
+                });
+                inputElement.disabled = false;
+
+                pond.addFile(file).then(() => {
+                  const dataTransfer = new DataTransfer();
+                  dataTransfer.items.add(file);
+                  inputElement.files = dataTransfer.files;
+                  pendingFile = file;
                   fileTypeCheck = "Audio";
-                } else if (file.type.startsWith("video/")) {
-                  fileTypeCheck = "Video";
-                } else if (file.type.startsWith("image/")) {
-                  fileTypeCheck = "Image";
-                } else {
-                  fileTypeCheck = "File";
-                }
-                const nativeEvent = new Event("change", { bubbles: true });
-                inputElement.dispatchEvent(nativeEvent);
-                $(inputElement).trigger("change");
-              });
-            })
-            .catch((e) => console.error(e));
+
+                  const nativeEvent = new Event("change", { bubbles: true });
+                  inputElement.dispatchEvent(nativeEvent);
+                  $(inputElement).trigger("change");
+                });
+              })
+              .catch((e) => console.error(e));
+          }
         }
       });
     }
   });
 }
+
 window.addEventListener("DOMContentLoaded", () => {
   initFilePond();
 });
