@@ -71,16 +71,3 @@ function findNode(arr, uid) {
 }
 
 const tmpl = $.templates("#tmpl-item");
-
-function renderAll() {
-  $("#forum-root").html(tmpl.render(postsStore));
-  initPlyr();
-}
-
-function initPlyr() {
-  if (window.Plyr) {
-    Plyr.setup('.js-player');
-  } else {
-    console.error("Plyr not loaded");
-  }
-}

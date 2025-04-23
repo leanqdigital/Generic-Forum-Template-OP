@@ -36,6 +36,7 @@ $(document).on("click", ".btn-comment", function (e) {
     initFilePond();
   }
 });
+
 $(document).on("click", function (e) {
   if (!$(e.target).closest(".comment-form, #post-creation-form").length) {
     $("#upload-menu").hide();
@@ -61,17 +62,17 @@ $(document).on("click", ".btn-delete", function () {
   const $item = $(this).closest(".item");
   $item.addClass("state-disabled");
 
-  // let node;
-  // (function find(arr) {
-  //   for (const x of arr) {
-  //     if (x.uid === uid) {
-  //       node = x;
-  //       return;
-  //     }
-  //     find(x.children);
-  //     if (node) return;
-  //   }
-  // })(postsStore);
+  let node;
+  (function find(arr) {
+    for (const x of arr) {
+      if (x.uid === uid) {
+        node = x;
+        return;
+      }
+      find(x.children);
+      if (node) return;
+    }
+  })(postsStore);
 
   const mutation =
     node.depth === 0
@@ -145,7 +146,9 @@ $(document).on("click", "#submit-post", async function () {
     console.error("Post failed", err);
   } finally {
     $btn.prop("disabled", false);
-    const filepondCloseButton = document.querySelector(".filepond--action-remove-item");
+    const filepondCloseButton = document.querySelector(
+      ".filepond--action-remove-item"
+    );
     if (filepondCloseButton) {
       filepondCloseButton.click();
     }
@@ -300,6 +303,8 @@ $(document).on("click", ".btn-bookmark", async function () {
 });
 
 function applyFilterAndRender() {
+  console.log("Function is running");
+
   requestAnimationFrame(() => {
     Plyr.setup(".js-player");
   });

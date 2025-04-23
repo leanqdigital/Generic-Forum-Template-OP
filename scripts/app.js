@@ -30,7 +30,7 @@ function connect() {
     ) {
       const raws = msg.payload.data.subscribeToForumPosts ?? [];
       postsStore = raws.map((r) => mapItem(r, 0));
-      applyFilterAndRender();
+      applyFilterAndRender();  
       // iniitilize plyr js 
       requestAnimationFrame(() => {
         Plyr.setup('.js-player');
