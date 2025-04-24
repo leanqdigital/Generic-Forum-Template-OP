@@ -1,10 +1,9 @@
 FilePond.registerPlugin(
   FilePondPluginFileValidateType,
   FilePondPluginImagePreview,
-  FilePondPluginMediaPreview,   // ✅ needed
-  FilePondPluginFilePoster      // optional
+  FilePondPluginMediaPreview,
+  FilePondPluginFilePoster
 );
-
 
 function initFilePond() {
   document.querySelectorAll(".upload-section").forEach((section) => {
@@ -23,8 +22,8 @@ function initFilePond() {
       acceptedFileTypes: [
         "image/*",
         "audio/*",
-        "video/webm",  
-        "audio/webm", 
+        "video/webm",
+        "audio/webm",
         "video/*",
         "application/pdf",
         "application/msword",
@@ -36,46 +35,48 @@ function initFilePond() {
             </span>`,
     });
 
-    pond.on('addfile', (error, fileItem) => {
+    pond.on("addfile", (error, fileItem) => {
       if (error) return;
-    
-      const type = fileItem.file.type;
-      const isAudio = type.startsWith("audio/");
+      const { file, container } = fileItem;
+      const { type, name } = file;
       const isVideo = type.startsWith("video/");
-    
-      if (isAudio || isVideo) {
-        const mediaEl = document.createElement(isVideo ? "video" : "audio");
-        mediaEl.src = URL.createObjectURL(fileItem.file);
-        mediaEl.controls = true;
-        mediaEl.style.width = "100%";
-        mediaEl.classList.add("mt-2", "rounded");
-    
-        if (isVideo) {
-          mediaEl.setAttribute("playsinline", "true"); // For iOS inline playback
-        }
-    
-        mediaEl.addEventListener("loadedmetadata", () => {
-          // Try to play automatically (might fail on iOS)
-          mediaEl.play().catch(() => {
-            // If autoplay is blocked, show manual play prompt
-            const playPrompt = document.createElement("button");
-            playPrompt.textContent = "▶ Tap to Play";
-            playPrompt.style.marginTop = "10px";
-            playPrompt.classList.add("play-btn");
-    
-            playPrompt.addEventListener("click", () => {
-              mediaEl.play();
-              playPrompt.remove();
-            });
-    
-            fileItem.container.appendChild(playPrompt);
-          });
-        });
-    
-        fileItem.container.appendChild(mediaEl);
+      const isAudio = type.startsWith("audio/");
+      if (!isVideo && !isAudio) return;
+
+      // 1. Check iOS support
+      const testEl = document.createElement(isVideo ? "video" : "audio");
+      if (!testEl.canPlayType(type)) {
+        const msg = document.createElement("p");
+        msg.textContent = `${name} isn’t supported for in-browser preview on iOS.`;
+        msg.style.color = "#c00";
+        container.appendChild(msg);
+        return;
       }
+
+      // 2. Make sure the FilePond wrapper can show overflow
+      container.style.overflow = "visible";
+
+      // 3. Create media element
+      const mediaEl = document.createElement(isVideo ? "video" : "audio");
+      mediaEl.src = URL.createObjectURL(file);
+      mediaEl.controls = true;
+      mediaEl.preload = "metadata";
+      mediaEl.classList.add("media-preview");
+
+      if (isVideo) {
+        // Inline playback attributes for iOS
+        mediaEl.setAttribute("playsinline", "");
+        mediaEl.setAttribute("webkit-playsinline", "");
+        mediaEl.setAttribute("x5-playsinline", "");
+      }
+
+      // 4. Append and wait for metadata to load
+      mediaEl.addEventListener("loadedmetadata", () => {
+        // at this point duration is known, so the scrubber will render
+      });
+
+      container.appendChild(mediaEl);
     });
-    
 
     const recorder = new MicRecorder({ bitRate: 128 });
     let isRecording = false;
@@ -108,24 +109,29 @@ function initFilePond() {
 
     if (recordBtn) {
       recordBtn.addEventListener("click", () => {
-        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        const isSafari = /^((?!chrome|android).)*safari/i.test(
+          navigator.userAgent
+        );
 
         if (!isRecording) {
           pond.setOptions({
             allowBrowse: false,
             allowDrop: false,
-            allowPaste: false
+            allowPaste: false,
           });
           inputElement.disabled = true;
           canvas.style.display = "block";
 
-          const audioConstraints = isSafari ? { audio: {} } : { audio: { sampleRate: 44100 } };
+          const audioConstraints = isSafari
+            ? { audio: {} }
+            : { audio: { sampleRate: 44100 } };
 
           navigator.mediaDevices
             .getUserMedia(audioConstraints)
             .then((stream) => {
               mediaStream = stream;
-              audioContext = new (window.AudioContext || window.webkitAudioContext)();
+              audioContext = new (window.AudioContext ||
+                window.webkitAudioContext)();
               analyser = audioContext.createAnalyser();
               source = audioContext.createMediaStreamSource(stream);
               source.connect(analyser);
@@ -152,7 +158,7 @@ function initFilePond() {
                   pond.setOptions({
                     allowBrowse: true,
                     allowDrop: true,
-                    allowPaste: true
+                    allowPaste: true,
                   });
                   inputElement.disabled = false;
 
@@ -186,7 +192,6 @@ function initFilePond() {
               inputElement.disabled = false;
               canvas.style.display = "none";
             });
-
         } else {
           cancelAnimationFrame(animationId);
           canvas.style.display = "none";
@@ -212,7 +217,7 @@ function initFilePond() {
                 pond.setOptions({
                   allowBrowse: true,
                   allowDrop: true,
-                  allowPaste: true
+                  allowPaste: true,
                 });
                 inputElement.disabled = false;
 
@@ -240,17 +245,13 @@ window.addEventListener("DOMContentLoaded", () => {
   initFilePond();
 });
 
-window.addEventListener("touchstart", () => {
-  try {
+window.addEventListener(
+  "touchstart",
+  () => {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (AudioCtx) {
-      const context = new AudioCtx();
-      if (context.state === "suspended") {
-        context.resume();
-      }
-    }
-  } catch (e) {
-    console.warn("AudioContext unlock failed:", e);
-  }
-}, { once: true });
-
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    if (ctx.state === "suspended") ctx.resume();
+  },
+  { once: true }
+);

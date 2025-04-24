@@ -199,3 +199,18 @@ button {
   border-radius: 9999px;
   display: block;
 }
+
+/* Allow the native controls to extend beyond the FilePond frame */
+.filepond--file {
+  overflow: visible !important;
+}
+
+.filepond--file-wrapper{
+  height: 120px !important;
+}
+
+/* Optional: Give your media preview a max-height so it stays tidy */
+.media-preview {
+  width: 100%;
+  max-height: 300px;
+}
