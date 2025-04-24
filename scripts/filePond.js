@@ -37,15 +37,45 @@ function initFilePond() {
     });
 
     pond.on('addfile', (error, fileItem) => {
-      if (!error && fileItem.file.type === "audio/webm") {
-        const audioEl = document.createElement("audio");
-        audioEl.src = URL.createObjectURL(fileItem.file);
-        audioEl.controls = true;
-        audioEl.style.width = "100%";
-        audioEl.classList.add("mt-2", "rounded");
-        fileItem.container.appendChild(audioEl);
+      if (error) return;
+    
+      const type = fileItem.file.type;
+      const isAudio = type.startsWith("audio/");
+      const isVideo = type.startsWith("video/");
+    
+      if (isAudio || isVideo) {
+        const mediaEl = document.createElement(isVideo ? "video" : "audio");
+        mediaEl.src = URL.createObjectURL(fileItem.file);
+        mediaEl.controls = true;
+        mediaEl.style.width = "100%";
+        mediaEl.classList.add("mt-2", "rounded");
+    
+        if (isVideo) {
+          mediaEl.setAttribute("playsinline", "true"); // For iOS inline playback
+        }
+    
+        mediaEl.addEventListener("loadedmetadata", () => {
+          // Try to play automatically (might fail on iOS)
+          mediaEl.play().catch(() => {
+            // If autoplay is blocked, show manual play prompt
+            const playPrompt = document.createElement("button");
+            playPrompt.textContent = "▶ Tap to Play";
+            playPrompt.style.marginTop = "10px";
+            playPrompt.classList.add("play-btn");
+    
+            playPrompt.addEventListener("click", () => {
+              mediaEl.play();
+              playPrompt.remove();
+            });
+    
+            fileItem.container.appendChild(playPrompt);
+          });
+        });
+    
+        fileItem.container.appendChild(mediaEl);
       }
     });
+    
 
     const recorder = new MicRecorder({ bitRate: 128 });
     let isRecording = false;
@@ -209,3 +239,18 @@ function initFilePond() {
 window.addEventListener("DOMContentLoaded", () => {
   initFilePond();
 });
+
+window.addEventListener("touchstart", () => {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (AudioCtx) {
+      const context = new AudioCtx();
+      if (context.state === "suspended") {
+        context.resume();
+      }
+    }
+  } catch (e) {
+    console.warn("AudioContext unlock failed:", e);
+  }
+}, { once: true });
+
