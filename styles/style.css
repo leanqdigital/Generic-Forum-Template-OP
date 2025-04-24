@@ -178,3 +178,24 @@ button {
 .filepond--action-remove-item {
   padding: 0 !important;
 }
+
+.notification-item.unread {
+  background-color: #e0f7fa;
+}
+
+.notification-item.read {
+  background-color: #f5f5f5;
+  opacity: 0.6;
+}
+
+.bell-indicator::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 9999px;
+  display: block;
+}

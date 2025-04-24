@@ -201,3 +201,61 @@ let DELETE_COMMENT_VOTE_MUTATION = `
     }
   }
 `;
+
+let NOTIFICATIONS_QUERY = `
+  subscription subscribeToAnnouncements($author_id: EduflowproContactID) {
+    subscribeToAnnouncements(
+      query: [
+        {
+          whereGroup: [
+            { where: { type: "Post" } }
+            {
+              andWhere: {
+                Post: [{ where: { author_id: $author_id _OPERATOR_: neq } }]
+              }
+            }
+          ]
+        }
+        {
+          orWhereGroup: [
+            { where: { type: "Comment" } }
+            {
+              andWhere: {
+                Comment: [
+                  {
+                    where: {
+                      author_id: $author_id
+                      _OPERATOR_: neq
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    ) {
+      ID: id
+      Date_Added: created_at
+      Title: title
+      Content: content
+      Type: type
+      Comment_ID: comment_id
+      Post_ID: post_id
+      Read_Contacts {
+        id
+      }
+    }
+  }
+`;
+
+let MARK_NOTIFICATION_READ = `
+  mutation createOReadContactReadAnnouncement(
+    $payload: OReadContactReadAnnouncementCreateInput = null
+  ) {
+    createOReadContactReadAnnouncement(payload: $payload) {
+      read_announcement_id 
+      read_contact_id 
+    }
+  }
+`;
